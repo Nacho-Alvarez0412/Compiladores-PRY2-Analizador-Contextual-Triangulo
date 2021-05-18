@@ -25,7 +25,7 @@ public final class IdentificationTable {
     level = 0;
     latest = null;
   }
-
+  //Hola
   // Opens a new level in the identification table, 1 higher than the
   // current topmost level.
 
