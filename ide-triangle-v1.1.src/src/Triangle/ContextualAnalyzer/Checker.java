@@ -125,6 +125,9 @@ import Triangle.AbstractSyntaxTrees.SimpleProgram;
 import Triangle.AbstractSyntaxTrees.CompoundProgram;
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
+
+import java.util.ArrayList;
+
 public final class Checker implements Visitor {
     
     
@@ -255,28 +258,86 @@ public final class Checker implements Visitor {
    public Object visitChooseCommand(ChooseCommand ast, Object o) {
       return null;
    }
-
+   
+   // @author       Andres
+   // @description  Analisis contextual para case literal
+   // @funcionlidad Analisis contextual instruccion choose
+   // @codigo       A.1
   public Object visitCaseLiteral(CaseLiteral ast, Object o) {
-    return null;
+    TypeDenoter chooseType = (TypeDenoter) o;
+    TypeDenoter literalType = (TypeDenoter) ast.T.visit(this, null);
+    if (!literalType.equals(chooseType)) {
+        reporter.reportError("\"%\" is not of the same type as the choose expression", 
+                ast.T.spelling, ast.T.position);
+    }
+    return ast.T.spelling;
   }
+  // END CAMBIO
 
+   // @author       Andres
+   // @description  Analisis contextual para simple case range
+   // @funcionlidad Analisis contextual instruccion choose
+   // @codigo       A.2
   public Object visitSimpleCaseRange(SimpleCaseRange ast, Object o) {
-    return null;
+    String caseLiteralSpelling = (String) ast.CL.visit(this, o);
+    ArrayList<String> caseRangeValues = new ArrayList<>();
+    caseRangeValues.add(caseLiteralSpelling);
+    
+    return caseLiteralSpelling;
   }
+  // END CAMBIO
 
+   
+   // @author       Andres
+   // @description  Analisis contextual para compound case range
+   // @funcionlidad Analisis contextual instruccion choose
+   // @codigo       A.3
   public Object visitCompoundCaseRange(CompoundCaseRange ast, Object o) {
-    return null;
+    TypeDenoter chooseType = (TypeDenoter) o;
+ 
+    String caseLiteral1Spelling = (String) ast.CL1.visit(this, o);
+    String caseLiteral2Spelling = (String) ast.CL2.visit(this, o);
+    
+    ArrayList<String> caseRangeValues = new ArrayList<>();
+    
+    // Choose type is integer
+    if (chooseType.equals(StdEnvironment.integerType)) {
+        if (Integer.parseInt(caseLiteral1Spelling) >= Integer.parseInt(caseLiteral2Spelling)) {
+            reporter.reportError("First literal in case range must be less than the second literal", 
+                    "", ast.position);
+        }
+        // Create case range values
+        for (int i = Integer.parseInt(caseLiteral1Spelling); i < Integer.parseInt(caseLiteral2Spelling) + 1; i++) {
+            caseRangeValues.add(String.valueOf(i));
+        }
+    }
+    // TODO: Implement for character values
+    return caseRangeValues;
   }
+  // END CAMBIO
 
   public Object visitCaseLiterals(CaseLiterals ast, Object o) {
     return null;
   }
+  
+   // @author       Andres
+   // @description  Analisis contextual para sequential case range
+   // @funcionlidad Analisis contextual instruccion choose
+   // @codigo       A.5
+  public Object visitSequentialCaseRange(SequentialCaseRange ast, Object o) {
+    ArrayList<String> caseRangeValues1 = (ArrayList<String>) ast.CR1.visit(this, o);
+    ArrayList<String> caseRangeValues2 = (ArrayList<String>) ast.CR2.visit(this, o);
+    
+    ArrayList<String> newCaseRangeValues = new ArrayList<String>();
+    newCaseRangeValues.addAll(caseRangeValues1);
+    newCaseRangeValues.addAll(caseRangeValues2);
 
-    public Object visitSequentialCaseRange(SequentialCaseRange ast, Object o) {
-        return null;
-    }
+    return newCaseRangeValues;
+  }
+  // END CAMBIO
 
     public Object visitElseCase(ElseCase ast, Object o) {
+        ast.C.visit(this, o);
         return null;
     }
 
