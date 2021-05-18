@@ -103,10 +103,15 @@ public class IDECompiler {
             rootAST = parser.parseProgram();
         */
         // END CAMBIO Andres
-        if (report.numErrors == 0) {
-            //System.out.println("Contextual Analysis ...");
-            //Checker checker = new Checker(report);
-            //checker.check(rootAST);
+        
+        // @author        Ignacio
+        // @descripcion   Análisis contextual
+        // @funcionalidad Análisis contextual
+        // @codigo        I.3
+        if (report.numErrors == 0 && isSimpleProgram) {
+            System.out.println("Contextual Analysis ...");
+            Checker checker = new Checker(report);
+            checker.check(parser.getSimpleProgram());
             if (report.numErrors == 0) {
                // System.out.println("Code Generation ...");
                 //Encoder encoder = new Encoder(report);
@@ -118,6 +123,23 @@ public class IDECompiler {
                 }
             }
         }
+        else{
+            System.out.println("Contextual Analysis ...");
+            Checker checker = new Checker(report);
+            checker.check(parser.getCompoundProgram());
+            if (report.numErrors == 0) {
+               // System.out.println("Code Generation ...");
+                //Encoder encoder = new Encoder(report);
+               //encoder.encodeRun(rootAST, false);
+                
+                if (report.numErrors == 0) {
+                    //encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));
+                    success = true;
+                }
+            }
+        }
+        
+        // End Cambio Ignacio
         if (generateHTML)
             try {
                 htmlGen.generateHTML();

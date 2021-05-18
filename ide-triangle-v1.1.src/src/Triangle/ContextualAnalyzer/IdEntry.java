@@ -18,16 +18,36 @@ import Triangle.AbstractSyntaxTrees.Declaration;
 
 public class IdEntry {
 
-  protected String id;
+  // @author        Ignacio
+  // @descripcion   Modificacion id 
+  // @funcionalidad Context Analyzer
+  // @codigo        I.3
+  protected String[] id;
   protected Declaration attr;
   protected int level;
   protected IdEntry previous;
 
-  IdEntry (String id, Declaration attr, int level, IdEntry previous) {
+  IdEntry (String[] id, Declaration attr, int level, IdEntry previous) {
     this.id = id;
     this.attr = attr;
     this.level = level;
     this.previous = previous;
   }
+  
+  /*
+    protected String[] id;
+    protected Declaration attr;
+    protected int level;
+    protected IdEntry previous;
+
+    IdEntry (String[] id, Declaration attr, int level, IdEntry previous) {
+      this.id = id;
+      this.attr = attr;
+      this.level = level;
+      this.previous = previous;
+    }
+  */
+  
+  //End Cambio
 
 }

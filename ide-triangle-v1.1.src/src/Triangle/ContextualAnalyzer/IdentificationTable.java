@@ -15,6 +15,7 @@
 package Triangle.ContextualAnalyzer;
 
 import Triangle.AbstractSyntaxTrees.Declaration;
+import javafx.util.Pair;
 
 public final class IdentificationTable {
 
@@ -25,7 +26,6 @@ public final class IdentificationTable {
     level = 0;
     latest = null;
   }
-  //Hola
   // Opens a new level in the identification table, 1 higher than the
   // current topmost level.
 
@@ -56,8 +56,41 @@ public final class IdentificationTable {
   // duplicated is set to to true iff there is already an entry for the
   // same identifier at the current level.
 
+  
+  
+  // @author        Ignacio
+  // @descripcion   Modificacion id 
+  // @funcionalidad Parseo de nuevos ASTs
+  // @codigo        I.1
   public void enter (String id, Declaration attr) {
+    String[] realID = getRealID(id);
+    IdEntry entry = this.latest;
+    boolean present = false, searching = true;
 
+    // Check for duplicate entry ...
+    while (searching) {
+      if (entry == null || entry.level < this.level)
+        searching = false;
+      else if (this.isEntryEquals(entry.id, realID)) {
+        present = true;
+        searching = false;
+       } else
+       entry = entry.previous;
+    }
+
+    attr.duplicated = present;
+    // Add new entry ...
+    entry = new IdEntry(realID, attr, this.level, this.latest);
+      System.out.println("("+realID[0]+","+realID[1]+")");
+    this.latest = entry;
+  }
+  
+  
+  
+  /*
+   I.1
+  
+  public void enter (String id, Declaration attr) {
     IdEntry entry = this.latest;
     boolean present = false, searching = true;
 
@@ -77,6 +110,8 @@ public final class IdentificationTable {
     entry = new IdEntry(id, attr, this.level, this.latest);
     this.latest = entry;
   }
+  */
+  // End cambio
 
   // Finds an entry for the given identifier in the identification table,
   // if any. If there are several entries for that identifier, finds the
@@ -104,5 +139,22 @@ public final class IdentificationTable {
 
     return attr;
   }
+    
+  // @author        Ignacio
+  // @descripcion   Verificar si se repite un entry
+  // @funcionalidad Parseo de nuevos ASTs
+  // @codigo        I.2
+    private boolean isEntryEquals( String[] entryID, String[] id) {
+        return entryID[0].equals(id[0]) && entryID[1].equals(id[1]);
+    }
+    
+  //End Cambio
+
+    private String[] getRealID(String id) {
+        if(this.level == 0)
+            return new String[]{"Ambient",id};
+        else
+            return new String[]{"Scope "+this.level,id};
+    }
 
 }
