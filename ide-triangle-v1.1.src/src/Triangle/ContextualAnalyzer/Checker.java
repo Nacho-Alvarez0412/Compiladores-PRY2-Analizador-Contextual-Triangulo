@@ -524,7 +524,9 @@ public final class Checker implements Visitor {
     }
     
      public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) {
-      return null;
+      ast.PD1.visit(this, null);
+      ast.PD2.visit(this, null);
+    return null;
     }    
     
   // Teminan metodos nuevos o modificados   
