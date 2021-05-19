@@ -21,10 +21,17 @@ public final class IdentificationTable {
 
   private int level;
   private IdEntry latest;
+  // @author        Ignacio
+  // @descripcion   Atributo para habilitar el ingreso de identificadores de un private
+  // @funcionalidad Metodos de chequeo de private
+  // @codigo        I.4
+  private boolean privateFlag;
+  // END CAMBIO Ignacio
 
   public IdentificationTable () {
     level = 0;
     latest = null;
+    privateFlag = false;
   }
   // Opens a new level in the identification table, 1 higher than the
   // current topmost level.
@@ -80,13 +87,17 @@ public final class IdentificationTable {
 
     attr.duplicated = present;
     // Add new entry ...
-    entry = new IdEntry(realID, attr, this.level, this.latest);
+    if (this.privateFlag){
+        this.level -= 1;
+        realID[0] = "Scope " + this.level;
+        entry = new IdEntry(realID, attr, this.level, this.latest);
+        this.level += 1;
+    } else {
+        entry = new IdEntry(realID, attr, this.level, this.latest);
+    }
       System.out.println("("+realID[0]+","+realID[1]+")");
     this.latest = entry;
   }
-  
-  
-  
   /*
    I.1
   
@@ -147,8 +158,6 @@ public final class IdentificationTable {
     private boolean isEntryEquals( String[] entryID, String[] id) {
         return entryID[0].equals(id[0]) && entryID[1].equals(id[1]);
     }
-    
-  //End Cambio
 
     private String[] getRealID(String id) {
         if(this.level == 0)
@@ -156,5 +165,14 @@ public final class IdentificationTable {
         else
             return new String[]{"Scope "+this.level,id};
     }
-
+    //End Cambio
+    
+  // @author        Ignacio
+  // @descripcion   Metodo para habilitar el ingreso de identificadores de un private
+  // @funcionalidad Metodos de chequeo de private
+  // @codigo        I.3
+    public void togglePrivateFlag () {
+        this.privateFlag = ! this.privateFlag;
+    }
+    //End Cambio
 }

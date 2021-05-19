@@ -27,4 +27,5 @@ public class VarExpDeclaration extends SingleDeclaration {
 
   public Identifier I;
   public Expression E;
+  public TypeDenoter T;
 }

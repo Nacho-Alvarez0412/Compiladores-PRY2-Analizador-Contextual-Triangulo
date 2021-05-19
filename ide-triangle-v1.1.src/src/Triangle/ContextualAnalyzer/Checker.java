@@ -185,15 +185,6 @@ public final class Checker implements Visitor {
     ast.C.visit(this, null);
     return null;
   }
-  /*
-  public Object visitWhileCommand(WhileCommand ast, Object o) {
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-    if (! eType.equals(StdEnvironment.booleanType))
-      reporter.reportError("Boolean expression expected here", "", ast.E.position);
-    ast.C.visit(this, null);
-    return null;
-  }
-  */
   
   public Object visitUntilLoopCommand(UntilLoopCommand ast, Object o) {
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
@@ -235,16 +226,8 @@ public final class Checker implements Visitor {
   public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
       return null;
   }
-  
-  public Object visitVarExpDeclaration(VarExpDeclaration ast, Object o) {
-      return null;
-  }
-  
+    
   public Object visitRecDeclaration(RecDeclaration ast, Object o) {
-      return null;
-  }
-  
-  public Object visitPrivDeclaration(PrivDeclaration ast, Object o) {
       return null;
   }
   
@@ -330,16 +313,7 @@ public final class Checker implements Visitor {
     return ast.type;
   }
   */
-  
-   public Object visitVarTDDeclaration(VarTDDeclaration ast, Object o) {
-    ast.T = (TypeDenoter) ast.T.visit(this, null);
-    idTable.enter (ast.I.spelling, ast);
-    if (ast.duplicated)
-      reporter.reportError ("identifier \"%\" already declared",
-                            ast.I.spelling, ast.position);
-    return null;
-    } 
-  
+ 
   /*
   public Object visitVarDeclaration(VarDeclaration ast, Object o) {
     ast.T = (TypeDenoter) ast.T.visit(this, null);
@@ -689,6 +663,59 @@ public final class Checker implements Visitor {
     return null;
   }
 
+  // @author        Joseph
+  // @description   Implementacion del metodo checker de declaraciones de variables inicializadas
+  // @funcionalidad Implementacion de metodos checker de ASTs de declaraciones
+  // @codigo        J.1
+  public Object visitVarExpDeclaration(VarExpDeclaration ast, Object o) {
+    ast.T = (TypeDenoter) ast.E.visit(this, null);
+    idTable.enter (ast.I.spelling, ast);
+    if (ast.duplicated)
+      reporter.reportError ("identifier \"%\" already declared",
+                            ast.I.spelling, ast.position);
+    return null;
+  }
+  // END CAMBIO Joseph
+  
+  // @author        Joseph
+  // @description   Implementacion del metodo checker de declaraciones de variables
+  // @funcionalidad Implementacion de metodos checker de ASTs de declaraciones
+  // @codigo        J.2
+   public Object visitVarTDDeclaration(VarTDDeclaration ast, Object o) {
+    ast.T = (TypeDenoter) ast.T.visit(this, null);
+    idTable.enter (ast.I.spelling, ast);
+    if (ast.duplicated)
+      reporter.reportError ("identifier \"%\" already declared",
+                            ast.I.spelling, ast.position);
+    return null;
+   } 
+  /* J.2
+   public Object visitWhileCommand(WhileCommand ast, Object o) {
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    if (! eType.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+    ast.C.visit(this, null);
+    return null;
+  }
+  */
+  // END CAMBIO Joseph
+   
+  // @author        Joseph
+  // @description   Implementacion del metodo checker de declaraciones privadas
+  // @funcionalidad Implementacion de metodos checker de ASTs de declaraciones
+  // @codigo        J.3
+  public Object visitPrivDeclaration(PrivDeclaration ast, Object o) {
+    idTable.openScope();
+    ast.D1.visit(this, null);
+    idTable.togglePrivateFlag();
+    ast.D2.visit(this, null);
+    idTable.togglePrivateFlag();
+    idTable.closeScope();
+      return null;
+   }
+  // END CAMBIO Joseph
+  
+  
   public Object visitConstDeclaration(ConstDeclaration ast, Object o) {
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     idTable.enter(ast.I.spelling, ast);
