@@ -21,7 +21,7 @@ public class IdEntry {
   // @author        Ignacio
   // @descripcion   Modificacion id 
   // @funcionalidad Context Analyzer
-  // @codigo        I.3
+  // @codigo        I.5
   protected String[] id;
   protected Declaration attr;
   protected int level;

@@ -3,12 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/JOS/Desktop/Compiladores-PRY2-Analizador-Contextual-Triangulo/ide-triangle-v1.1.src/src/Triangle/TreeDrawer/Drawer.java</file>
-            <file>file:/C:/Users/JOS/Desktop/Compiladores-PRY2-Analizador-Contextual-Triangulo/ide-triangle-v1.1.src/src/Triangle/TreeDrawer/LayoutVisitor.java</file>
-            <file>file:/C:/Users/JOS/Desktop/Compiladores-PRY2-Analizador-Contextual-Triangulo/ide-triangle-v1.1.src/src/Triangle/ContextualAnalyzer/Checker.java</file>
-            <file>file:/C:/Users/JOS/Desktop/Compiladores-PRY2-Analizador-Contextual-Triangulo/ide-triangle-v1.1.src/src/Core/Visitors/TreeVisitor.java</file>
-            <file>file:/C:/Users/JOS/Desktop/Compiladores-PRY2-Analizador-Contextual-Triangulo/ide-triangle-v1.1.src/src/Core/Visitors/TableVisitor.java</file>
-            <file>file:/C:/Users/JOS/Desktop/Compiladores-PRY2-Analizador-Contextual-Triangulo/ide-triangle-v1.1.src/src/Core/Visitors/XMLVisitor.java</file>
+            <file>file:/D:/Repositorios/Compiladores-PRY2-Analizador-Contextual-Triangulo/ide-triangle-v1.1.src/src/Triangle/ContextualAnalyzer/IdEntry.java</file>
+            <file>file:/D:/Repositorios/Compiladores-PRY2-Analizador-Contextual-Triangulo/ide-triangle-v1.1.src/src/Triangle/ContextualAnalyzer/IdentificationTable.java</file>
+            <file>file:/D:/Repositorios/Compiladores-PRY2-Analizador-Contextual-Triangulo/ide-triangle-v1.1.src/src/Triangle/ContextualAnalyzer/Checker.java</file>
         </group>
     </open-files>
 </project-private>
