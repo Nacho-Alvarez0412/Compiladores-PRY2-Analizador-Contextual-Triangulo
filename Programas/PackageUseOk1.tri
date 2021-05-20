@@ -3,7 +3,12 @@ package myP ~
 	var z: Integer 
 end;
 
+package myZ ~ 
+	var a: Char;
+	var y: Integer 
+end;
+
 let var b: Integer in
-b:= myP $ b; 
+myZ $ a := 'a'; 
 putint(b)end
 !OK
