@@ -1,12 +1,11 @@
 package myP ~ 
-	var a: Integer
+	var a: Integer;
+	var z: Integer 
 end;
-let 
-	var b: Integer
-in
-	b:= myP $ a;
-	putint(b)
-
-end
-
+package myZ ~ 
+	var a: Integer;
+	var z: Integer 
+end;
+let var b: Integer in
+b:= myP $ a; putint(b)end
 !OK

@@ -331,7 +331,8 @@ public final class Checker implements Visitor {
     if (binding == null) {
       reportUndeclared (ast.LI.I);
       return StdEnvironment.errorType;
-    } else if (! (binding instanceof TypeDeclaration)) {
+    } 
+    else if (! (binding instanceof TypeDeclaration)) {
       reporter.reportError ("\"%\" is not a type identifier",
                             ast.LI.I.spelling, ast.LI.position);
       return StdEnvironment.errorType;
@@ -476,8 +477,15 @@ public final class Checker implements Visitor {
     return ast.type;
   }
   */
-  
+    
+    // @author        Ignacio
+    // @descripcion   Modificacion visitPackageIdentifier 
+    // @funcionalidad Implementación visitPackageIdentifier
+    // @codigo        I.6
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
+      if(this.idTable.checkForPackage(ast.I.spelling))
+          reporter.reportError ("package \"%\" already declared",ast.I.spelling, ast.position);
+      
       return null;
   }
   
@@ -485,8 +493,12 @@ public final class Checker implements Visitor {
       return null;
   }
   
+    // @author        Ignacio
+    // @descripcion   Modificacion visitPackageIdentifier 
+    // @funcionalidad Implementación visitPackageIdentifier
+    // @codigo        I.7
     public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
-       return null;
+       return idTable.retrieve(ast.I.spelling);
     }
     
     public Object visitPackageLongIdentifier(PackageLongIdentifier ast, Object o) {
@@ -494,7 +506,11 @@ public final class Checker implements Visitor {
     }
     
     public Object visitSinglePackageDeclaration(SinglePackageDeclaration ast, Object o) {
-      return null;
+        idTable.openPackageScope(ast.PI.I.spelling);
+        ast.PI.visit(this, null);
+        ast.D.visit(this, null);
+        idTable.closePackageScope();
+        return null;
     }
     
      public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) {
@@ -502,6 +518,8 @@ public final class Checker implements Visitor {
       ast.PD2.visit(this, null);
     return null;
     }    
+     
+     //END CAMBIO IGNACIO
     
   // Teminan metodos nuevos o modificados   
      
@@ -1148,7 +1166,6 @@ public final class Checker implements Visitor {
   // type, and enters it in the identification table.
 
   private TypeDeclaration declareStdType (String id, TypeDenoter typedenoter) {
-
     TypeDeclaration binding;
 
     binding = new TypeDeclaration(new Identifier(id, dummyPos), typedenoter, dummyPos);
