@@ -407,8 +407,11 @@ public final class Checker implements Visitor {
               variable = var2.I.spelling;
           }
           
-          if(idTable.inPackage(packageId,variable))
-            return ast.VN.visit(this, null);
+          if(idTable.inPackage(packageId,variable)){
+            TypeDenoter vnType = (TypeDenoter) ast.VN.visit(this, null);
+            ast.variable = ast.VN.variable;
+            return vnType;
+          }
           
           else{
             reporter.reportError (" \"%\" is not declared in the package",variable, ast.position);
