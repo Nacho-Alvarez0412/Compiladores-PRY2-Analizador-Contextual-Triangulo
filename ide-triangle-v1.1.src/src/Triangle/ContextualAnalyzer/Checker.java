@@ -256,6 +256,9 @@ public final class Checker implements Visitor {
   }
   
    public Object visitChooseCommand(ChooseCommand ast, Object o) {
+      TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+      // TODO: Determinar que retorna el case literals
+      ast.CS.visit(this, eType);
       return null;
    }
    
@@ -283,7 +286,7 @@ public final class Checker implements Visitor {
     ArrayList<String> caseRangeValues = new ArrayList<>();
     caseRangeValues.add(caseLiteralSpelling);
     
-    return caseLiteralSpelling;
+    return caseRangeValues;
   }
   // END CAMBIO
 
@@ -315,15 +318,29 @@ public final class Checker implements Visitor {
     return caseRangeValues;
   }
   // END CAMBIO
-
+  
+   // @author       Andres
+   // @description  Analisis contextual para case literals
+   // @funcionlidad Analisis contextual instruccion choose
+   // @codigo       A.6
   public Object visitCaseLiterals(CaseLiterals ast, Object o) {
-    return null;
+    ArrayList<String> caseRangeValues = (ArrayList<String>) ast.CR.visit(this, o);
+    for (int i = 0; i < caseRangeValues.size(); i++) {
+        for (int j = i + 1; j < caseRangeValues.size(); j++) {
+            if (caseRangeValues.get(i).equals(caseRangeValues.get(j))) {
+                 reporter.reportError("Repeated element in case literals", 
+                    "", ast.position);
+            }
+        }
+    }
+    return caseRangeValues;
   }
+  // END CAMBIO
   
    // @author       Andres
    // @description  Analisis contextual para sequential case range
    // @funcionlidad Analisis contextual instruccion choose
-   // @codigo       A.5
+   // @codigo       A.4
   public Object visitSequentialCaseRange(SequentialCaseRange ast, Object o) {
     ArrayList<String> caseRangeValues1 = (ArrayList<String>) ast.CR1.visit(this, o);
     ArrayList<String> caseRangeValues2 = (ArrayList<String>) ast.CR2.visit(this, o);
@@ -335,28 +352,73 @@ public final class Checker implements Visitor {
     return newCaseRangeValues;
   }
   // END CAMBIO
-
-    public Object visitElseCase(ElseCase ast, Object o) {
+  
+   // @author       Andres
+   // @description  Analisis contextual para else case
+   // @funcionlidad Analisis contextual instruccion choose
+   // @codigo       A.5
+  public Object visitElseCase(ElseCase ast, Object o) {
+    ast.C.visit(this, o);
+    return null;
+  }
+  // END CAMBIO
+    
+    // @author       Andres
+    // @description  Analisis contextual para compound cases
+    // @funcionlidad Analisis contextual instruccion choose
+    // @codigo       A.7
+    public Object visitCompoundCases(CompoundCases ast, Object o) {
+       // TODO: Realizar validaciones entre todos los cases
+       ast.C.visit(this, o);
+       ast.EC.visit(this, o);
+       return null;
+    }
+    // END CAMBIO
+    
+    // @author       Andres
+    // @description  Analisis contextual para simple cases
+    // @funcionlidad Analisis contextual instruccion choose
+    // @codigo       A.8
+    public Object visitSimpleCases(SimpleCases ast, Object o) {
+        // TODO: Realizar validaciones entre todos los cases
         ast.C.visit(this, o);
         return null;
     }
+    // END CAMBIO
 
-    public Object visitCompoundCases(CompoundCases ast, Object o) {
-       return null;
-    }
-
+    // @author       Andres
+    // @description  Analisis contextual para sequential case
+    // @funcionlidad Analisis contextual instruccion choose
+    // @codigo       A.9
     public Object visitSequentialCase(SequentialCase ast, Object o) {
-       return null;
+       ArrayList<String> caseValues1 = (ArrayList<String>) ast.C1.visit(this, o);
+       ArrayList<ArrayList<String>> casesValues = new ArrayList<>();
+       casesValues.add(caseValues1);
+       
+       if (ast.C2 instanceof SequentialCase) {    
+           ArrayList<ArrayList<String>> caseValues2  = (ArrayList<ArrayList<String>>) ast.C2.visit(this, o);
+           casesValues.addAll(caseValues2);
+       } else {
+           ArrayList<String> casesValues2 = (ArrayList<String>) ast.C2.visit(this, o);
+           casesValues.add(casesValues2);
+       }
+       
+       return casesValues;
     }
-
-    public Object visitSimpleCases(SimpleCases ast, Object o) {
-        return null;
-    }
-
-    public Object visitSingleCase(SingleCase ast, Object o) {
-        return null;
-    }
+    // END CAMBIO
     
+    // @author       Andres
+    // @description  Analisis contextual para single case
+    // @funcionlidad Analisis contextual instruccion choose
+    // @codigo       A.10
+    public Object visitSingleCase(SingleCase ast, Object o) {
+        ArrayList<String> caseValues = (ArrayList<String>) ast.CL.visit(this, o);
+        ast.C.visit(this, o);
+        return caseValues;
+    }
+    // END CAMBIO
+
+   
   public Object visitCallExpression(CallExpression ast, Object o) {
     Declaration binding = (Declaration) ast.LI.visit(this, null);
     if (binding == null) {
