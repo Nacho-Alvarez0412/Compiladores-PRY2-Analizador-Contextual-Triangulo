@@ -2,10 +2,8 @@ package myP ~
 	var a: Integer;
 	var z: Integer 
 end;
-package myZ ~ 
-	var a: Integer;
-	var z: Integer 
-end;
+
 let var b: Integer in
-b:= myP $ a; putint(b)end
+b:= myP $ b; 
+putint(b)end
 !OK
