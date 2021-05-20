@@ -331,7 +331,8 @@ public final class Checker implements Visitor {
     if (binding == null) {
       reportUndeclared (ast.LI.I);
       return StdEnvironment.errorType;
-    } else if (! (binding instanceof TypeDeclaration)) {
+    } 
+    else if (! (binding instanceof TypeDeclaration)) {
       reporter.reportError ("\"%\" is not a type identifier",
                             ast.LI.I.spelling, ast.LI.position);
       return StdEnvironment.errorType;
@@ -492,8 +493,12 @@ public final class Checker implements Visitor {
       return null;
   }
   
+    // @author        Ignacio
+    // @descripcion   Modificacion visitPackageIdentifier 
+    // @funcionalidad Implementación visitPackageIdentifier
+    // @codigo        I.7
     public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
-       return null;
+       return idTable.retrieve(ast.I.spelling);
     }
     
     public Object visitPackageLongIdentifier(PackageLongIdentifier ast, Object o) {
@@ -1161,7 +1166,6 @@ public final class Checker implements Visitor {
   // type, and enters it in the identification table.
 
   private TypeDeclaration declareStdType (String id, TypeDenoter typedenoter) {
-
     TypeDeclaration binding;
 
     binding = new TypeDeclaration(new Identifier(id, dummyPos), typedenoter, dummyPos);

@@ -134,7 +134,6 @@ public final class IdentificationTable {
   // otherwise returns the attribute field of the entry found.
 
   public Declaration retrieve (String id) {
-
     IdEntry entry;
     Declaration attr = null;
     boolean present = false, searching = true;
@@ -143,7 +142,7 @@ public final class IdentificationTable {
     while (searching) {
       if (entry == null)
         searching = false;
-      else if (entry.id.equals(id)) {
+      else if (entry.id[1].equals(id)) {
         present = true;
         searching = false;
         attr = entry.attr;
