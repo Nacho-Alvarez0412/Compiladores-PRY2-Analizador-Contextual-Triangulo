@@ -84,20 +84,24 @@ public class IDECompiler {
         isSimpleProgram = parser.getIsSimpleProgram();
         if (isSimpleProgram) {
             simpleProgramAST = parser.getSimpleProgram();
+            /*
             try {
                 xmlGenerator.generateXML(simpleProgramAST,sourceName.substring(sourceName.lastIndexOf("\\")+1).replaceAll(".tri", ".xml") );     
             } catch (Exception e) {
                 System.out.println(e);
             }
+            */
             
 
         } else {
             compoundProgramAST = parser.getCompoundProgram();
+            /*
             try {
                 xmlGenerator.generateXML(compoundProgramAST,sourceName.substring(sourceName.lastIndexOf("\\")+1).replaceAll(".tri", ".xml"));     
             } catch (Exception e) {
                 System.out.println(e);
             }
+            */
         }
         /*
             rootAST = parser.parseProgram();
