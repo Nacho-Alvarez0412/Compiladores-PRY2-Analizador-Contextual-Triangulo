@@ -476,8 +476,15 @@ public final class Checker implements Visitor {
     return ast.type;
   }
   */
-  
+    
+    // @author        Ignacio
+    // @descripcion   Modificacion visitPackageIdentifier 
+    // @funcionalidad Implementación visitPackageIdentifier
+    // @codigo        I.6
     public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
+      if(this.idTable.checkForPackage(ast.I.spelling))
+          reporter.reportError ("package \"%\" already declared",ast.I.spelling, ast.position);
+      
       return null;
   }
   
@@ -494,7 +501,11 @@ public final class Checker implements Visitor {
     }
     
     public Object visitSinglePackageDeclaration(SinglePackageDeclaration ast, Object o) {
-      return null;
+        idTable.openPackageScope(ast.PI.I.spelling);
+        ast.PI.visit(this, null);
+        ast.D.visit(this, null);
+        idTable.closePackageScope();
+        return null;
     }
     
      public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) {
@@ -502,6 +513,8 @@ public final class Checker implements Visitor {
       ast.PD2.visit(this, null);
     return null;
     }    
+     
+     //END CAMBIO IGNACIO
     
   // Teminan metodos nuevos o modificados   
      

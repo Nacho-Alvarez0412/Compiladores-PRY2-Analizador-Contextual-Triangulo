@@ -15,23 +15,26 @@
 package Triangle.ContextualAnalyzer;
 
 import Triangle.AbstractSyntaxTrees.Declaration;
-import javafx.util.Pair;
 
 public final class IdentificationTable {
 
   private int level;
   private IdEntry latest;
   // @author        Ignacio
-  // @descripcion   Atributo para habilitar el ingreso de identificadores de un private
-  // @funcionalidad Metodos de chequeo de private
-  // @codigo        I.4
+  // @descripcion   Agregar atributos a IdentificationTable
+  // @funcionalidad Incrementar funcionalidad de IdentificationTable
+  // @codigo        I.1
   private boolean privateFlag;
-  // END CAMBIO Ignacio
+  private String packageID;
+  private int levelBackup;
+  // END CAMBIO IGNACIO
 
   public IdentificationTable () {
     level = 0;
+    levelBackup = level;
     latest = null;
     privateFlag = false;
+    packageID = null;
   }
   // Opens a new level in the identification table, 1 higher than the
   // current topmost level.
@@ -66,9 +69,9 @@ public final class IdentificationTable {
   
   
   // @author        Ignacio
-  // @descripcion   Modificacion id 
-  // @funcionalidad Parseo de nuevos ASTs
-  // @codigo        I.1
+  // @descripcion   Modificacion enter 
+  // @funcionalidad Agregar mas funcionalidades al enter
+  // @codigo        I.2
   public void enter (String id, Declaration attr) {
     String[] realID = getRealID(id);
     IdEntry entry = this.latest;
@@ -122,7 +125,7 @@ public final class IdentificationTable {
     this.latest = entry;
   }
   */
-  // End cambio
+  // END CAMBIO IGNACIO
 
   // Finds an entry for the given identifier in the identification table,
   // if any. If there are several entries for that identifier, finds the
@@ -153,26 +156,59 @@ public final class IdentificationTable {
     
   // @author        Ignacio
   // @descripcion   Verificar si se repite un entry
-  // @funcionalidad Parseo de nuevos ASTs
-  // @codigo        I.2
+  // @funcionalidad Agregar nueva función isEntryEquals
+  // @codigo        I.3
     private boolean isEntryEquals( String[] entryID, String[] id) {
         return entryID[0].equals(id[0]) && entryID[1].equals(id[1]);
     }
 
     private String[] getRealID(String id) {
-        if(this.level == 0)
+        if(this.level == 0 && this.packageID == null)
             return new String[]{"Ambient",id};
+        else if (this.level == 0 && this.packageID != null)
+            return new String[]{this.packageID,id};
         else
             return new String[]{"Scope "+this.level,id};
     }
-    //End Cambio
+    //END CAMBIO IGNACIO
+    
     
   // @author        Ignacio
-  // @descripcion   Metodo para habilitar el ingreso de identificadores de un private
-  // @funcionalidad Metodos de chequeo de private
-  // @codigo        I.3
+  // @descripcion   Nuevos métodos para la IdentificationTable
+  // @funcionalidad Agregar mayor funcionalidad a Identification Table
+  // @codigo        I.4
     public void togglePrivateFlag () {
         this.privateFlag = ! this.privateFlag;
     }
-    //End Cambio
+    
+
+    boolean checkForPackage(String packageId) {
+        IdEntry entry = this.latest;
+        boolean searching = true;
+        while (searching) {
+            
+          if (entry == null || entry.level < this.level)
+            searching = false;
+          
+          else if (entry.id[0].equals(packageId))
+            return true;
+          
+          else
+          entry = entry.previous;
+        }
+        return false;
+    }
+
+    void openPackageScope(String packageID) {
+        this.packageID = packageID;
+        this.levelBackup = this.level;
+        this.level = 0;
+    }
+
+    void closePackageScope() {
+        this.level = this.levelBackup;
+        this.packageID = null;
+    }
+    
+    //END CAMBIO IGNACIO
 }
