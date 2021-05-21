@@ -378,15 +378,50 @@ public final class Checker implements Visitor {
   // @descripcion   Modificacion visitPackageIdentifier 
   // @funcionalidad Implementación visitPackageIdentifier
   // @codigo        I.6
-  public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
-    if(this.idTable.checkForPackage(ast.I.spelling))
-        reporter.reportError ("package \"%\" already declared",ast.I.spelling, ast.position);
-    
-    return null;
+  public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {   
+    return ast.I.visit(this, o);
   }
   
+  // @author        Ignacio
+  // @descripcion   Modificacion visitPackageIdentifier 
+  // @funcionalidad Implementación visitPackageIdentifier
+  // @codigo        I.8
   public Object visitPackageVname(PackageVname ast, Object o) {
+      VarTDDeclaration packageDeclaration = (VarTDDeclaration) ast.PI.visit(this,null);
+      
+      if(packageDeclaration != null){
+          String variable = "";
+          String packageId = packageDeclaration.I.spelling;
+          if(ast.VN instanceof SimpleVarName){
+              SimpleVarName var = (SimpleVarName)ast.VN;
+              variable = var.I.spelling;
+          }
+          
+          else if(ast.VN instanceof DotVarName){
+              DotVarName var = (DotVarName)ast.VN;
+              variable = var.I.spelling;
+          }
+          else{
+              SubscriptVarName var = (SubscriptVarName)ast.VN;
+              SimpleVarName var2 = (SimpleVarName)var.V;
+              variable = var2.I.spelling;
+          }
+          
+          if(idTable.inPackage(packageId,variable)){
+            TypeDenoter vnType = (TypeDenoter) ast.VN.visit(this, null);
+            ast.variable = ast.VN.variable;
+            return vnType;
+          }
+          
+          else{
+            reporter.reportError (" \"%\" is not declared in the package",variable, ast.position);
+            return null;
+          }
+              
+      }
+      reporter.reportError ("package \"%\" is not declared",ast.PI.I.spelling, ast.position);
       return null;
+      
   }
   
     // @author        Ignacio
@@ -394,7 +429,7 @@ public final class Checker implements Visitor {
     // @funcionalidad Implementación visitPackageIdentifier
     // @codigo        I.7
     public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
-       return idTable.retrieve(ast.I.spelling);
+       return ast.I.visit(this, null);
     }
     
     public Object visitPackageLongIdentifier(PackageLongIdentifier ast, Object o) {
@@ -402,10 +437,15 @@ public final class Checker implements Visitor {
     }
     
     public Object visitSinglePackageDeclaration(SinglePackageDeclaration ast, Object o) {
-        idTable.openPackageScope(ast.PI.I.spelling);
-        ast.PI.visit(this, null);
-        ast.D.visit(this, null);
-        idTable.closePackageScope();
+        if (ast.PI.visit(this, null) == null){
+            Declaration dummyDeclaration = new VarTDDeclaration(ast.PI.I,null,dummyPos);
+            idTable.enter(ast.PI.I.spelling,dummyDeclaration );
+            idTable.openPackageScope(ast.PI.I.spelling);
+            ast.D.visit(this, null);
+            idTable.closePackageScope();
+        }
+        else
+            reporter.reportError ("package \"%\" already declared",ast.PI.I.spelling, ast.position);
         return null;
     }
     
@@ -1265,6 +1305,8 @@ public final class Checker implements Visitor {
     idTable.enter(op, binding);
     return binding;
   }
+    
+  
 
   // Creates small ASTs to represent the standard types.
   // Creates small ASTs to represent "declarations" of standard types,

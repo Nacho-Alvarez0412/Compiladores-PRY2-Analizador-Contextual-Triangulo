@@ -209,5 +209,22 @@ public final class IdentificationTable {
         this.packageID = null;
     }
     
+    boolean inPackage(String packageId, String variable) {
+      boolean searching = true;
+      IdEntry entry = this.latest;
+      
+      while (searching) {
+        if (entry == null)
+          searching = false;
+        else if (entry.id[0].equals(packageId) && entry.id[1].equals(variable)) {
+          return true;
+         } else
+         entry = entry.previous;
+      }
+      return false;
+    }
+    
     //END CAMBIO IGNACIO
+
+    
 }
