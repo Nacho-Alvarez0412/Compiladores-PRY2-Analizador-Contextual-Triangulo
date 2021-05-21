@@ -19,9 +19,9 @@ import Triangle.AbstractSyntaxTrees.Declaration;
 public class IdEntry {
 
   // @author        Ignacio
-  // @descripcion   Modificacion id 
-  // @funcionalidad Context Analyzer
-  // @codigo        I.3
+  // @descripcion   Modificacion atributos IdEntry
+  // @funcionalidad Agregar nuevos atributos a IdEntry
+  // @codigo        I.5
   protected String[] id;
   protected Declaration attr;
   protected int level;
@@ -48,6 +48,6 @@ public class IdEntry {
     }
   */
   
-  //End Cambio
+  //END CAMBIO IGNACIO
 
 }

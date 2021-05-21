@@ -15,16 +15,26 @@
 package Triangle.ContextualAnalyzer;
 
 import Triangle.AbstractSyntaxTrees.Declaration;
-import javafx.util.Pair;
 
 public final class IdentificationTable {
 
   private int level;
   private IdEntry latest;
+  // @author        Ignacio
+  // @descripcion   Agregar atributos a IdentificationTable
+  // @funcionalidad Incrementar funcionalidad de IdentificationTable
+  // @codigo        I.1
+  private boolean privateFlag;
+  private String packageID;
+  private int levelBackup;
+  // END CAMBIO IGNACIO
 
   public IdentificationTable () {
     level = 0;
+    levelBackup = level;
     latest = null;
+    privateFlag = false;
+    packageID = null;
   }
   // Opens a new level in the identification table, 1 higher than the
   // current topmost level.
@@ -59,9 +69,9 @@ public final class IdentificationTable {
   
   
   // @author        Ignacio
-  // @descripcion   Modificacion id 
-  // @funcionalidad Parseo de nuevos ASTs
-  // @codigo        I.1
+  // @descripcion   Modificacion enter 
+  // @funcionalidad Agregar mas funcionalidades al enter
+  // @codigo        I.2
   public void enter (String id, Declaration attr) {
     String[] realID = getRealID(id);
     IdEntry entry = this.latest;
@@ -80,13 +90,17 @@ public final class IdentificationTable {
 
     attr.duplicated = present;
     // Add new entry ...
-    entry = new IdEntry(realID, attr, this.level, this.latest);
+    if (this.privateFlag){
+        this.level -= 1;
+        realID[0] = "Scope " + this.level;
+        entry = new IdEntry(realID, attr, this.level, this.latest);
+        this.level += 1;
+    } else {
+        entry = new IdEntry(realID, attr, this.level, this.latest);
+    }
       System.out.println("("+realID[0]+","+realID[1]+")");
     this.latest = entry;
   }
-  
-  
-  
   /*
    I.1
   
@@ -111,7 +125,7 @@ public final class IdentificationTable {
     this.latest = entry;
   }
   */
-  // End cambio
+  // END CAMBIO IGNACIO
 
   // Finds an entry for the given identifier in the identification table,
   // if any. If there are several entries for that identifier, finds the
@@ -120,7 +134,6 @@ public final class IdentificationTable {
   // otherwise returns the attribute field of the entry found.
 
   public Declaration retrieve (String id) {
-
     IdEntry entry;
     Declaration attr = null;
     boolean present = false, searching = true;
@@ -129,7 +142,7 @@ public final class IdentificationTable {
     while (searching) {
       if (entry == null)
         searching = false;
-      else if (entry.id.equals(id)) {
+      else if (entry.id[1].equals(id)) {
         present = true;
         searching = false;
         attr = entry.attr;
@@ -142,19 +155,76 @@ public final class IdentificationTable {
     
   // @author        Ignacio
   // @descripcion   Verificar si se repite un entry
-  // @funcionalidad Parseo de nuevos ASTs
-  // @codigo        I.2
+  // @funcionalidad Agregar nueva función isEntryEquals
+  // @codigo        I.3
     private boolean isEntryEquals( String[] entryID, String[] id) {
         return entryID[0].equals(id[0]) && entryID[1].equals(id[1]);
     }
-    
-  //End Cambio
 
     private String[] getRealID(String id) {
-        if(this.level == 0)
+        if(this.level == 0 && this.packageID == null)
             return new String[]{"Ambient",id};
+        else if (this.level == 0 && this.packageID != null)
+            return new String[]{this.packageID,id};
         else
             return new String[]{"Scope "+this.level,id};
     }
+    //END CAMBIO IGNACIO
+    
+    
+  // @author        Ignacio
+  // @descripcion   Nuevos métodos para la IdentificationTable
+  // @funcionalidad Agregar mayor funcionalidad a Identification Table
+  // @codigo        I.4
+    public void togglePrivateFlag () {
+        this.privateFlag = ! this.privateFlag;
+    }
+    
 
+    boolean checkForPackage(String packageId) {
+        IdEntry entry = this.latest;
+        boolean searching = true;
+        while (searching) {
+            
+          if (entry == null || entry.level < this.level)
+            searching = false;
+          
+          else if (entry.id[0].equals(packageId))
+            return true;
+          
+          else
+          entry = entry.previous;
+        }
+        return false;
+    }
+
+    void openPackageScope(String packageID) {
+        this.packageID = packageID;
+        this.levelBackup = this.level;
+        this.level = 0;
+    }
+
+    void closePackageScope() {
+        this.level = this.levelBackup;
+        this.packageID = null;
+    }
+    
+    boolean inPackage(String packageId, String variable) {
+      boolean searching = true;
+      IdEntry entry = this.latest;
+      
+      while (searching) {
+        if (entry == null)
+          searching = false;
+        else if (entry.id[0].equals(packageId) && entry.id[1].equals(variable)) {
+          return true;
+         } else
+         entry = entry.previous;
+      }
+      return false;
+    }
+    
+    //END CAMBIO IGNACIO
+
+    
 }

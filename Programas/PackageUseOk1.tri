@@ -1,12 +1,17 @@
 package myP ~ 
-	var a: Integer
+	var a:= 2;
+	var z: Integer 
 end;
-let 
-	var b: Integer
-in
-	b:= myP $ a;
-	putint(b)
 
+
+
+let var b: Integer in
+myZ $ y := 2 
 end
+
+package myZ ~ 
+	const a ~ 5;
+	var y:= myP $ a
+end;
 
 !OK

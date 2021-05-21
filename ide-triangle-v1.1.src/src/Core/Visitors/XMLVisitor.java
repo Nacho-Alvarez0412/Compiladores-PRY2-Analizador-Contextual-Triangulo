@@ -226,7 +226,7 @@ public class XMLVisitor implements Visitor {
 
   @Override
   public Object visitFunction(Function ast, Object o) {
-    Element elemento = doc.createElement("ProcFuncs");
+    Element elemento = doc.createElement("Function");
 
     elemento.appendChild((Node) ast.E.visitXML(this, null));
 
