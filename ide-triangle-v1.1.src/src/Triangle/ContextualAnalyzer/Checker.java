@@ -257,8 +257,8 @@ public final class Checker implements Visitor {
   
    public Object visitChooseCommand(ChooseCommand ast, Object o) {
       TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-      if (eType.equals(StdEnvironment.integerType) 
-              || eType.equals(StdEnvironment.charType)) {
+      if (!eType.equals(StdEnvironment.integerType) 
+              && !eType.equals(StdEnvironment.charType)) {
           reporter.reportError("Choose expression must be an integer or character", null, ast.E.position);
       }
       // TODO: Determinar que retorna el case literals
