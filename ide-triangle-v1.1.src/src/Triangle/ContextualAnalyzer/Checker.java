@@ -374,7 +374,7 @@ public final class Checker implements Visitor {
     public Object visitCompoundCases(CompoundCases ast, Object o) {
        // TODO: Realizar validaciones entre todos los cases
        ast.C.visit(this, o);
-       ast.EC.visit(this, o);
+       ast.EC.visit(this, null);
        return null;
     }
     // END CAMBIO
@@ -384,9 +384,30 @@ public final class Checker implements Visitor {
     // @funcionlidad Analisis contextual instruccion choose
     // @codigo       A.8
     public Object visitSimpleCases(SimpleCases ast, Object o) {
-        // TODO: Realizar validaciones entre todos los cases
-        ast.C.visit(this, o);
-        return null;
+        // Get all case values
+        ArrayList<ArrayList<String>> casesValues = new ArrayList<>();
+        if (ast.C instanceof SequentialCase) {
+            ArrayList<ArrayList<String>> cases = (ArrayList<ArrayList<String>>) ast.C.visit(this, o);
+            casesValues.addAll(cases);
+        } else if (ast.C instanceof SingleCase) {
+            ArrayList<String> cases = (ArrayList<String>) ast.C.visit(this, o);
+            casesValues.add(cases);
+        }
+        // Check if an element in the set has been repeated
+        for (int i = 0; i < casesValues.size(); i++) {
+            ArrayList<String> currentValues = casesValues.get(i);
+            for (int j = 0; j < currentValues.size(); j++) {       
+                // Check if another set repeats the value
+                for (int x = i + 1; x < casesValues.size(); x++) {
+                    if (casesValues.get(x).contains(currentValues.get(j))) {
+                        reporter.reportError("\"%\" is repeated in choose command", 
+                                currentValues.get(i), ast.position);
+                    }
+                }
+            }
+        }
+        
+        return casesValues;
     }
     // END CAMBIO
 
@@ -417,7 +438,7 @@ public final class Checker implements Visitor {
     // @codigo       A.10
     public Object visitSingleCase(SingleCase ast, Object o) {
         ArrayList<String> caseValues = (ArrayList<String>) ast.CL.visit(this, o);
-        ast.C.visit(this, o);
+        ast.C.visit(this, null);
         return caseValues;
     }
     // END CAMBIO
