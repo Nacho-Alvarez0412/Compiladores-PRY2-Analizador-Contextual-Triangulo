@@ -255,14 +255,17 @@ public final class Checker implements Visitor {
       return null;
   }
   
+   // @author       Andres
+   // @description  Analisis contextual para alternativa choose de command
+   // @funcionlidad Analisis contextual instruccion choose
+   // @codigo       A.11
    public Object visitChooseCommand(ChooseCommand ast, Object o) {
       TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
       if (!eType.equals(StdEnvironment.integerType) 
               && !eType.equals(StdEnvironment.charType)) {
           reporter.reportError("Choose expression must be an integer or character", null, ast.E.position);
       }
-      // TODO: Determinar que retorna el case literals
-      ast.CS.visit(this, eType);
+      ArrayList<ArrayList<String>> cases = (ArrayList<ArrayList<String>>) ast.CS.visit(this, eType);
       return null;
    }
    
@@ -309,7 +312,7 @@ public final class Checker implements Visitor {
     
     // Choose type is integer
     if (chooseType.equals(StdEnvironment.integerType)) {
-        if (Integer.parseInt(caseLiteral1Spelling) >= Integer.parseInt(caseLiteral2Spelling)) {
+        if (Integer.parseInt(caseLiteral1Spelling) > Integer.parseInt(caseLiteral2Spelling)) {
             reporter.reportError("First literal in case range must be less than the second literal", 
                     "", ast.position);
         }
@@ -317,8 +320,16 @@ public final class Checker implements Visitor {
         for (int i = Integer.parseInt(caseLiteral1Spelling); i < Integer.parseInt(caseLiteral2Spelling) + 1; i++) {
             caseRangeValues.add(String.valueOf(i));
         }
+    } else if (chooseType.equals(StdEnvironment.charType)) {
+        if (caseLiteral1Spelling.charAt(1) > caseLiteral2Spelling.charAt(1)) {
+            reporter.reportError("First character literal in case range must have a minor ascii code than the second literal", 
+                    "", ast.position);
+        }
+        // Create range of values
+        for (char c = caseLiteral1Spelling.charAt(1); c <= caseLiteral2Spelling.charAt(1); c++) {
+            caseRangeValues.add("'" + c + "'");
+        }
     }
-    // TODO: Implement for character values
     return caseRangeValues;
   }
   // END CAMBIO
@@ -372,10 +383,32 @@ public final class Checker implements Visitor {
     // @funcionlidad Analisis contextual instruccion choose
     // @codigo       A.7
     public Object visitCompoundCases(CompoundCases ast, Object o) {
-       // TODO: Realizar validaciones entre todos los cases
-       ast.C.visit(this, o);
+        // Get all case values
+        ArrayList<ArrayList<String>> casesValues = new ArrayList<>();
+        if (ast.C instanceof SequentialCase) {
+            ArrayList<ArrayList<String>> cases = (ArrayList<ArrayList<String>>) ast.C.visit(this, o);
+            casesValues.addAll(cases);
+        } else if (ast.C instanceof SingleCase) {
+            ArrayList<String> cases = (ArrayList<String>) ast.C.visit(this, o);
+            casesValues.add(cases);
+        }
+        // Check if an element in the set has been repeated
+        if (casesValues.size() > 1) {
+             for (int i = 0; i < casesValues.size(); i++) {
+                ArrayList<String> currentValues = casesValues.get(i);
+                for (int j = 0; j < currentValues.size(); j++) {       
+                    // Check if another set repeats the value
+                    for (int x = i + 1; x < casesValues.size(); x++) {
+                        if (casesValues.get(x).indexOf(currentValues.get(j)) != -1) {
+                            reporter.reportError("\"%\" is repeated in choose command", 
+                                    currentValues.get(j), ast.position);
+                        }
+                    }
+                }
+            }
+        }
        ast.EC.visit(this, null);
-       return null;
+       return casesValues;
     }
     // END CAMBIO
     
@@ -394,14 +427,16 @@ public final class Checker implements Visitor {
             casesValues.add(cases);
         }
         // Check if an element in the set has been repeated
-        for (int i = 0; i < casesValues.size(); i++) {
-            ArrayList<String> currentValues = casesValues.get(i);
-            for (int j = 0; j < currentValues.size(); j++) {       
-                // Check if another set repeats the value
-                for (int x = i + 1; x < casesValues.size(); x++) {
-                    if (casesValues.get(x).contains(currentValues.get(j))) {
-                        reporter.reportError("\"%\" is repeated in choose command", 
-                                currentValues.get(i), ast.position);
+        if (casesValues.size() > 1) {
+             for (int i = 0; i < casesValues.size(); i++) {
+                ArrayList<String> currentValues = casesValues.get(i);
+                for (int j = 0; j < currentValues.size(); j++) {       
+                    // Check if another set repeats the value
+                    for (int x = i + 1; x < casesValues.size(); x++) {
+                        if (casesValues.get(x).indexOf(currentValues.get(j)) != -1) {
+                            reporter.reportError("\"%\" is repeated in choose command", 
+                                    currentValues.get(j), ast.position);
+                        }
                     }
                 }
             }
@@ -416,15 +451,15 @@ public final class Checker implements Visitor {
     // @funcionlidad Analisis contextual instruccion choose
     // @codigo       A.9
     public Object visitSequentialCase(SequentialCase ast, Object o) {
-       ArrayList<String> caseValues1 = (ArrayList<String>) ast.C1.visit(this, o);
+       ArrayList<String> caseValues1 = (ArrayList<String>) ast.C2.visit(this, o);
        ArrayList<ArrayList<String>> casesValues = new ArrayList<>();
        casesValues.add(caseValues1);
        
-       if (ast.C2 instanceof SequentialCase) {    
-           ArrayList<ArrayList<String>> caseValues2  = (ArrayList<ArrayList<String>>) ast.C2.visit(this, o);
+       if (ast.C1 instanceof SequentialCase) {    
+           ArrayList<ArrayList<String>> caseValues2  = (ArrayList<ArrayList<String>>) ast.C1.visit(this, o);
            casesValues.addAll(caseValues2);
        } else {
-           ArrayList<String> casesValues2 = (ArrayList<String>) ast.C2.visit(this, o);
+           ArrayList<String> casesValues2 = (ArrayList<String>) ast.C1.visit(this, o);
            casesValues.add(casesValues2);
        }
        
