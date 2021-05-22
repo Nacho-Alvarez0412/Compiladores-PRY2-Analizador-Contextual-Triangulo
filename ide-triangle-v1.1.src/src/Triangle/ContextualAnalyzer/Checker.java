@@ -136,17 +136,7 @@ public final class Checker implements Visitor {
 ///
 //////////////////////////////////////////////////////////////////////////
   
-  public Object visitCompoundIfCommand(CompoundIfCommand ast, Object o) {
-      return null;
-  }
-  
-  public Object visitSingleElsifCommand(SingleElsifCommand ast, Object o) {
-      return null;
-  }
-  
-  public Object visitSequentialElsifCommand(SequentialElsifCommand ast, Object o) {
-      return null;
-  }
+
 
   public Object visitCallCommand(CallCommand ast, Object o) {
 
@@ -178,43 +168,7 @@ public final class Checker implements Visitor {
     return null;
   }
   */
-  public Object visitWhileLoopCommand(WhileLoopCommand ast, Object o) {
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-    if (! eType.equals(StdEnvironment.booleanType))
-      reporter.reportError("Boolean expression expected here", "", ast.E.position);
-    ast.C.visit(this, null);
-    return null;
-  }
-  
-  public Object visitUntilLoopCommand(UntilLoopCommand ast, Object o) {
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-    if (! eType.equals(StdEnvironment.booleanType))
-      reporter.reportError("Boolean expression expected here", "", ast.E.position);
-    ast.C.visit(this, null);
-    return null;
-  }
-  
-  public Object visitDoLoopWhileCommand(DoLoopWhileCommand ast, Object o) {
-      return null;
-  }
-  
- public Object visitDoLoopUntilCommand(DoLoopUntilCommand ast, Object o) {
-      return null;
-  }
-  
-  public Object visitForLoopDoCommand(ForLoopDoCommand ast, Object o) {
-      return null;
-  }
-  
-  public Object visitForLoopWhileCommand(ForLoopWhileCommand ast, Object o) {
-      return null;
-  }
-  
-  public Object visitForLoopUntilCommand(ForLoopUntilCommand ast, Object o) {
-      return null;
-  } 
-  
-    
+     
   public Object visitProcedure(Procedure ast, Object o) {
       return null;
   } 
@@ -228,10 +182,6 @@ public final class Checker implements Visitor {
   }
     
   public Object visitRecDeclaration(RecDeclaration ast, Object o) {
-      return null;
-  }
-  
-  public Object visitForFromCommand(ForFromCommand ast, Object o) {
       return null;
   }
   
@@ -452,7 +402,7 @@ public final class Checker implements Visitor {
      public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) {
       ast.PD1.visit(this, null);
       ast.PD2.visit(this, null);
-    return null;
+      return null;
     }    
      
      //END CAMBIO IGNACIO
@@ -460,6 +410,10 @@ public final class Checker implements Visitor {
   // Teminan metodos nuevos o modificados   
      
     
+     
+     
+     
+     
   // Commands
 
   // Always returns null. Does not use the given object.
@@ -478,6 +432,11 @@ public final class Checker implements Visitor {
     return null;
   }
 
+  // @author        Joseph
+  // @descripcion   Modificacion de metodos checker de if
+  // @funcionalidad Implementacion de metodos checker para comandos
+  // @codigo        J.8  
+ 
   public Object visitIfCommand(IfCommand ast, Object o) {
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     if (! eType.equals(StdEnvironment.booleanType))
@@ -486,6 +445,43 @@ public final class Checker implements Visitor {
     ast.C2.visit(this, null);
     return null;
   }
+  
+  public Object visitCompoundIfCommand(CompoundIfCommand ast, Object o) {
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    if (! eType.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+    ast.C1.visit(this, null);
+    ast.EIC.visit(this, null);
+    ast.C2.visit(this, null);
+    return null;
+  }
+  
+  public Object visitSingleElsifCommand(SingleElsifCommand ast, Object o) {
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    if (! eType.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+    ast.C.visit(this, null);
+    return null;
+  }
+  
+  public Object visitSequentialElsifCommand(SequentialElsifCommand ast, Object o) {
+      ast.SE1.visit(this, null);
+      ast.SE2.visit(this, null);
+      return null;
+  }
+  
+  /* J.8
+  public Object visitIfCommand(IfCommand ast, Object o) {
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    if (! eType.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+    ast.C1.visit(this, null);
+    ast.C2.visit(this, null);
+    return null;
+  }
+  */
+  
+  // END CAMBIO Joseph
 
   public Object visitLetCommand(LetCommand ast, Object o) {
     idTable.openScope();
@@ -500,6 +496,105 @@ public final class Checker implements Visitor {
     ast.C2.visit(this, null);
     return null;
   }
+  
+  // @author        Joseph
+  // @descripcion   Modificacion de metodos checker de comandos loop
+  // @funcionalidad Implementacion de metodos checker para comandos
+  // @codigo        J.6
+  public Object visitWhileLoopCommand(WhileLoopCommand ast, Object o) {
+      TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+      if (! eType.equals(StdEnvironment.booleanType))
+        reporter.reportError("Boolean expression expected here", "", ast.E.position);
+      ast.C.visit(this, null);
+      return null;
+  }
+
+  public Object visitUntilLoopCommand(UntilLoopCommand ast, Object o) {
+      TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+      if (! eType.equals(StdEnvironment.booleanType))
+        reporter.reportError("Boolean expression expected here", "", ast.E.position);
+      ast.C.visit(this, null);
+      return null;
+  }
+
+  public Object visitDoLoopWhileCommand(DoLoopWhileCommand ast, Object o) {
+      TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+      if (! eType.equals(StdEnvironment.booleanType))
+        reporter.reportError("Boolean expression expected here", "", ast.E.position);
+      ast.C.visit(this, null);
+      return null;      
+  }
+
+  public Object visitDoLoopUntilCommand(DoLoopUntilCommand ast, Object o) {
+      TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+      if (! eType.equals(StdEnvironment.booleanType))
+         reporter.reportError("Boolean expression expected here", "", ast.E.position);
+       ast.C.visit(this, null);
+      return null;  
+   }
+  // END CAMBIO Joseph
+
+  // @author        Joseph
+  // @descripcion   Modificacion de metodos checker de comandos loop for
+  // @funcionalidad Implementacion de metodos checker para comandos
+  // @codigo        J.7
+   public Object visitForFromCommand(ForFromCommand ast, Object o) {
+       ConstDeclaration controlVarDecl = new ConstDeclaration (ast.I, new IntegerExpression(new IntegerLiteral ("0", ast.position), ast.position), ast.position);
+       idTable.openScope();
+       controlVarDecl.visit(this,null);
+       if (controlVarDecl.duplicated)
+            reporter.reportError ("identifier \"%\" already declared",
+                            ast.I.spelling, ast.position);
+       return null; 
+   }
+   
+   public Object visitForLoopWhileCommand(ForLoopWhileCommand ast, Object o) {
+      TypeDenoter e1Type = (TypeDenoter) ast.E1.visit(this, null);
+      if (! e1Type.equals(StdEnvironment.integerType))
+         reporter.reportError("Integer expression expected here", "", ast.E1.position);
+      TypeDenoter e2Type = (TypeDenoter) ast.FFC.E.visit(this, null);
+      if (! e2Type.equals(StdEnvironment.integerType))
+         reporter.reportError("Integer expression expected here", "", ast.FFC.E.position);
+      ast.FFC.visit(this,null);
+      TypeDenoter e3Type = (TypeDenoter) ast.E2.visit(this, null);
+      if (! e3Type.equals(StdEnvironment.booleanType))
+         reporter.reportError("Boolean expression expected here", "", ast.E2.position);
+      ast.C.visit(this, null);
+      idTable.closeScope();
+      return null;
+   }
+   
+   public Object visitForLoopUntilCommand(ForLoopUntilCommand ast, Object o) {
+      TypeDenoter e1Type = (TypeDenoter) ast.E1.visit(this, null);
+      if (! e1Type.equals(StdEnvironment.integerType))
+         reporter.reportError("Integer expression expected here", "", ast.E1.position);
+      TypeDenoter e2Type = (TypeDenoter) ast.FFC.E.visit(this, null);
+      if (! e2Type.equals(StdEnvironment.integerType))
+         reporter.reportError("Integer expression expected here", "", ast.FFC.E.position);
+      ast.FFC.visit(this,null);
+      TypeDenoter e3Type = (TypeDenoter) ast.E2.visit(this, null);
+      if (! e3Type.equals(StdEnvironment.booleanType))
+         reporter.reportError("Boolean expression expected here", "", ast.E2.position);
+      ast.C.visit(this, null);
+      idTable.closeScope();
+      return null; 
+   }
+   
+   public Object visitForLoopDoCommand(ForLoopDoCommand ast, Object o) {
+      TypeDenoter e1Type = (TypeDenoter) ast.E.visit(this, null);
+      if (! e1Type.equals(StdEnvironment.integerType))
+         reporter.reportError("Integer expression expected here", "", ast.E.position);
+      TypeDenoter e2Type = (TypeDenoter) ast.FFC.E.visit(this, null);
+      if (! e2Type.equals(StdEnvironment.integerType))
+         reporter.reportError("Integer expression expected here", "", ast.FFC.E.position);
+      ast.FFC.visit(this,null);
+      ast.C.visit(this, null);
+      idTable.closeScope();
+      return null; 
+   }
+ 
+  // END CAMBIO Joseph
+
   
   // Expressions
 
@@ -980,7 +1075,7 @@ public final class Checker implements Visitor {
   public Object visitIntTypeDenoter(IntTypeDenoter ast, Object o) {
     return StdEnvironment.integerType;
   }
-
+  
   public Object visitRecordTypeDenoter(RecordTypeDenoter ast, Object o) {
     ast.FT = (FieldTypeDenoter) ast.FT.visit(this, null);
     return ast;
@@ -1112,11 +1207,11 @@ public final class Checker implements Visitor {
     
     // END CAMBIO Joseph
     
-    // @author        Joseph
-    // @description   Cambio de vname por var name en el metodo checker de Subscript var name y dor var name
-    // @funcionalidad Cambio en los metodos checker de vname por var name
-    // @codigo        J.5
-    public Object visitDotVarName(DotVarName ast, Object o) {
+  // @author        Joseph
+  // @description   Cambio de vname por var name en el metodo checker de Subscript var name y dor var name
+  // @funcionalidad Cambio en los metodos checker de vname por var name
+  // @codigo        J.5
+  public Object visitDotVarName(DotVarName ast, Object o) {
     ast.type = null;
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     ast.variable = ast.V.variable;
@@ -1131,22 +1226,22 @@ public final class Checker implements Visitor {
     return ast.type;
    }
     
-    public Object visitSubscriptVarName(SubscriptVarName ast, Object o) {
-     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
-     ast.variable = ast.V.variable;
-     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-     if (vType != StdEnvironment.errorType) {
-       if (! (vType instanceof ArrayTypeDenoter))
-         reporter.reportError ("array expected here", "", ast.V.position);
-       else {
-         if (! eType.equals(StdEnvironment.integerType))
-           reporter.reportError ("Integer expression expected here", "",
+  public Object visitSubscriptVarName(SubscriptVarName ast, Object o) {
+    TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
+    ast.variable = ast.V.variable;
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    if (vType != StdEnvironment.errorType) {
+      if (! (vType instanceof ArrayTypeDenoter))
+        reporter.reportError ("array expected here", "", ast.V.position);
+        else {
+          if (! eType.equals(StdEnvironment.integerType))
+          reporter.reportError ("Integer expression expected here", "",
                                  ast.E.position);
-         ast.type = ((ArrayTypeDenoter) vType).T;
-       }
-     }
-     return ast.type;
+          ast.type = ((ArrayTypeDenoter) vType).T;
+        }
     }
+    return ast.type;
+  }
    /* J.5
     public Object visitSubscriptVname(SubscriptVname ast, Object o) {
       TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
