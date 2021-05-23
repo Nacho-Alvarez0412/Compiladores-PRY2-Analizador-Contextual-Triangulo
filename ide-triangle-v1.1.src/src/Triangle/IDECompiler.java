@@ -112,33 +112,36 @@ public class IDECompiler {
         // @descripcion   Análisis contextual
         // @funcionalidad Análisis contextual
         // @codigo        I.3
-        if (report.numErrors == 0 && isSimpleProgram) {
-            System.out.println("Contextual Analysis ...");
-            Checker checker = new Checker(report);
-            checker.check(parser.getSimpleProgram());
-            if (report.numErrors == 0) {
-               // System.out.println("Code Generation ...");
-                //Encoder encoder = new Encoder(report);
-               //encoder.encodeRun(rootAST, false);
-                
+        
+        if(report.numErrors == 0){
+            if (isSimpleProgram) {
+                System.out.println("Contextual Analysis ...");
+                Checker checker = new Checker(report);
+                checker.check(parser.getSimpleProgram());
                 if (report.numErrors == 0) {
-                    //encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));
-                    success = true;
+                   // System.out.println("Code Generation ...");
+                    //Encoder encoder = new Encoder(report);
+                   //encoder.encodeRun(rootAST, false);
+
+                    if (report.numErrors == 0) {
+                        //encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));
+                        success = true;
+                    }
                 }
             }
-        }
-        else{
-            System.out.println("Contextual Analysis ...");
-            Checker checker = new Checker(report);
-            checker.check(parser.getCompoundProgram());
-            if (report.numErrors == 0) {
-               // System.out.println("Code Generation ...");
-                //Encoder encoder = new Encoder(report);
-               //encoder.encodeRun(rootAST, false);
-                
+            else {
+                System.out.println("Contextual Analysis ...");
+                Checker checker = new Checker(report);
+                checker.check(parser.getCompoundProgram());
                 if (report.numErrors == 0) {
-                    //encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));
-                    success = true;
+                   // System.out.println("Code Generation ...");
+                    //Encoder encoder = new Encoder(report);
+                   //encoder.encodeRun(rootAST, false);
+
+                    if (report.numErrors == 0) {
+                        //encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));
+                        success = true;
+                    }
                 }
             }
         }

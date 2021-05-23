@@ -327,6 +327,7 @@ public final class Checker implements Visitor {
   */
    
   public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object o) {
+      
     Declaration binding = (Declaration) ast.LI.visit(this, null);
     if (binding == null) {
       reportUndeclared (ast.LI.I);
@@ -381,12 +382,14 @@ public final class Checker implements Visitor {
   public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {   
     return ast.I.visit(this, o);
   }
-  
+  //END CAMBIO IGNACIO
+
   // @author        Ignacio
   // @descripcion   Modificacion visitPackageIdentifier 
   // @funcionalidad Implementación visitPackageIdentifier
   // @codigo        I.8
   public Object visitPackageVname(PackageVname ast, Object o) {
+      
       VarTDDeclaration packageDeclaration = (VarTDDeclaration) ast.PI.visit(this,null);
       
       if(packageDeclaration != null){
@@ -399,7 +402,8 @@ public final class Checker implements Visitor {
           
           else if(ast.VN instanceof DotVarName){
               DotVarName var = (DotVarName)ast.VN;
-              variable = var.I.spelling;
+              SimpleVarName var2 = (SimpleVarName) var.V;
+              variable = var2.I.spelling;
           }
           else{
               SubscriptVarName var = (SubscriptVarName)ast.VN;
@@ -408,7 +412,8 @@ public final class Checker implements Visitor {
           }
           
           if(idTable.inPackage(packageId,variable)){
-            TypeDenoter vnType = (TypeDenoter) ast.VN.visit(this, null);
+            TypeDenoter vnType = (TypeDenoter) ast.VN.visit(this, packageId);
+            
             ast.variable = ast.VN.variable;
             return vnType;
           }
@@ -423,7 +428,8 @@ public final class Checker implements Visitor {
       return null;
       
   }
-  
+      //END CAMBIO IGNACIO
+
     // @author        Ignacio
     // @descripcion   Modificacion visitPackageIdentifier 
     // @funcionalidad Implementación visitPackageIdentifier
@@ -465,8 +471,11 @@ public final class Checker implements Visitor {
   // Always returns null. Does not use the given object.
 
   public Object visitAssignCommand(AssignCommand ast, Object o) {
+      
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    
+      
     if (!ast.V.variable)
       reporter.reportError ("LHS of assignment is not a variable", "", ast.V.position);
     if (! eType.equals(vType))
@@ -580,6 +589,7 @@ public final class Checker implements Visitor {
   }
 
   public Object visitRecordExpression(RecordExpression ast, Object o) {
+    
     FieldTypeDenoter rType = (FieldTypeDenoter) ast.RA.visit(this, null);
     ast.type = new RecordTypeDenoter(rType, ast.position);
     return ast.type;
@@ -606,6 +616,7 @@ public final class Checker implements Visitor {
   }
 
   public Object visitVnameExpression(VnameExpression ast, Object o) {
+      
     ast.type = (TypeDenoter) ast.V.visit(this, null);
     return ast.type;
   }
@@ -752,6 +763,8 @@ public final class Checker implements Visitor {
   // given object.
 
   public Object visitMultipleRecordAggregate(MultipleRecordAggregate ast, Object o) {
+    
+      
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     FieldTypeDenoter rType = (FieldTypeDenoter) ast.RA.visit(this, null);
     TypeDenoter fType = checkFieldIdentifier(rType, ast.I);
@@ -1003,7 +1016,12 @@ public final class Checker implements Visitor {
   }
 
   public Object visitIdentifier(Identifier I, Object o) {
-    Declaration binding = idTable.retrieve(I.spelling);
+    Declaration binding;
+    if(o instanceof String)
+        binding = idTable.retrieveFromPackage(I.spelling,(String) o);
+    else
+        binding = idTable.retrieve(I.spelling);
+    
     if (binding != null)
       I.decl = binding;
     return binding;
@@ -1048,7 +1066,13 @@ public final class Checker implements Visitor {
   public Object visitSimpleVarName(SimpleVarName ast, Object o) {
     ast.variable = false;
     ast.type = StdEnvironment.errorType;
-    Declaration binding = (Declaration) ast.I.visit(this, null);
+    Declaration binding;
+    if (o instanceof String){
+        binding = (Declaration) ast.I.visit(this, o);
+    }
+    else
+        binding = (Declaration) ast.I.visit(this, null);
+    
     if (binding == null)
       reportUndeclared(ast.I);
     else
@@ -1056,7 +1080,9 @@ public final class Checker implements Visitor {
         ast.type = ((ConstDeclaration) binding).E.type;
         ast.variable = false;
       } else if (binding instanceof VarTDDeclaration) {
+          
         ast.type = ((VarTDDeclaration) binding).T;
+        VarTDDeclaration var = (VarTDDeclaration) binding;
         ast.variable = true;
       } else if (binding instanceof VarExpDeclaration) {
         ast.type = ((VarExpDeclaration) binding).T;
@@ -1079,6 +1105,8 @@ public final class Checker implements Visitor {
    // @funcionalidad Cambio en los metodos checker de comando de asignacion
    // @codigo        J.4
     public Object visitSimpleVname(SimpleVname ast, Object o) {
+      
+      
       TypeDenoter vnType = (TypeDenoter) ast.VN.visit(this, null);
       ast.variable = ast.VN.variable;
       return vnType;
@@ -1117,22 +1145,39 @@ public final class Checker implements Visitor {
     // @funcionalidad Cambio en los metodos checker de vname por var name
     // @codigo        J.5
     public Object visitDotVarName(DotVarName ast, Object o) {
-    ast.type = null;
-    TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
-    ast.variable = ast.V.variable;
-    if (! (vType instanceof RecordTypeDenoter))
-      reporter.reportError ("record expected here", "", ast.V.position);
-    else {
-      ast.type = checkFieldIdentifier(((RecordTypeDenoter) vType).FT, ast.I);
-      if (ast.type == StdEnvironment.errorType)
-        reporter.reportError ("no field \"%\" in this record type",
-                              ast.I.spelling, ast.I.position);
-    }
-    return ast.type;
+     
+        ast.type = null;
+
+        TypeDenoter vType;
+         if(o instanceof String)
+            vType = (TypeDenoter) ast.V.visit(this, o);
+
+         else
+            vType = (TypeDenoter) ast.V.visit(this, o);
+
+        ast.variable = ast.V.variable;
+        if (! (vType instanceof RecordTypeDenoter))
+          reporter.reportError ("record expected here", "", ast.V.position);
+        else {
+          ast.type = checkFieldIdentifier(((RecordTypeDenoter) vType).FT, ast.I);
+          if (ast.type == StdEnvironment.errorType)
+            reporter.reportError ("no field \"%\" in this record type",
+                                  ast.I.spelling, ast.I.position);
+        }
+        return ast.type;
    }
     
     public Object visitSubscriptVarName(SubscriptVarName ast, Object o) {
-     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
+              
+
+        
+     TypeDenoter vType;
+     if(o instanceof String)
+        vType = (TypeDenoter) ast.V.visit(this, o);
+        
+     else
+        vType = (TypeDenoter) ast.V.visit(this, o);
+     
      ast.variable = ast.V.variable;
      TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
      if (vType != StdEnvironment.errorType) {

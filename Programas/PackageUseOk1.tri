@@ -1,17 +1,14 @@
-package myP ~ 
-	var a:= 2;
-	var z: Integer 
+package myP ~
+ 	var a: record y : Integer, x : Char end
 end;
 
+let 
+	var b: record y : Char, x : Char end
+in
 
+	myP$a.y := 7
 
-let var b: Integer in
-myZ $ y := 2 
 end
 
-package myZ ~ 
-	const a ~ 5;
-	var y:= myP $ a
-end;
 
 !OK

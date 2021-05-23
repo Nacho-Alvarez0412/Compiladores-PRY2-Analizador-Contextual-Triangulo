@@ -226,5 +226,25 @@ public final class IdentificationTable {
     
     //END CAMBIO IGNACIO
 
+    Declaration retrieveFromPackage(String id, String packageName) {
+        IdEntry entry;
+        Declaration attr = null;
+        boolean present = false, searching = true;
+
+        entry = this.latest;
+        while (searching) {
+          if (entry == null)
+            searching = false;
+          else if (entry.id[1].equals(id) && entry.id[0].equals(packageName)) {
+            present = true;
+            searching = false;
+            attr = entry.attr;
+          } else
+            entry = entry.previous;
+        }
+
+        return attr;
+    }
+
     
 }
