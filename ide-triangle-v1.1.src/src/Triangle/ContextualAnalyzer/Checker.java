@@ -131,7 +131,7 @@ public final class Checker implements Visitor {
 //////////////////////////////////////////////////////////////////////////
 ///
 ///
-/// Metodos de análisis contextual nuevos o modificados
+/// Metodos de anï¿½lisis contextual nuevos o modificados
 ///
 ///
 //////////////////////////////////////////////////////////////////////////
@@ -229,81 +229,11 @@ public final class Checker implements Visitor {
         return null;
     }
     
-  public Object visitCallExpression(CallExpression ast, Object o) {
-    Declaration binding = (Declaration) ast.LI.visit(this, null);
-    if (binding == null) {
-      reportUndeclared(ast.LI.I);
-      ast.type = StdEnvironment.errorType;
-    } else if (binding instanceof FuncDeclaration) {
-      ast.APS.visit(this, ((FuncDeclaration) binding).FPS);
-      ast.type = ((FuncDeclaration) binding).T;
-    } else if (binding instanceof FuncFormalParameter) {
-      ast.APS.visit(this, ((FuncFormalParameter) binding).FPS);
-      ast.type = ((FuncFormalParameter) binding).T;
-    } else
-      reporter.reportError("\"%\" is not a function identifier",
-                           ast.LI.I.spelling, ast.LI.position);
-    return ast.type;
-  }
-  /*
-  public Object visitCallExpression(CallExpression ast, Object o) {
-    Declaration binding = (Declaration) ast.I.visit(this, null);
-    if (binding == null) {
-      reportUndeclared(ast.I);
-      ast.type = StdEnvironment.errorType;
-    } else if (binding instanceof FuncDeclaration) {
-      ast.APS.visit(this, ((FuncDeclaration) binding).FPS);
-      ast.type = ((FuncDeclaration) binding).T;
-    } else if (binding instanceof FuncFormalParameter) {
-      ast.APS.visit(this, ((FuncFormalParameter) binding).FPS);
-      ast.type = ((FuncFormalParameter) binding).T;
-    } else
-      reporter.reportError("\"%\" is not a function identifier",
-                           ast.I.spelling, ast.I.position);
-    return ast.type;
-  }
-  */
- 
-  /*
-  public Object visitVarDeclaration(VarDeclaration ast, Object o) {
-    ast.T = (TypeDenoter) ast.T.visit(this, null);
-    idTable.enter (ast.I.spelling, ast);
-    if (ast.duplicated)
-      reporter.reportError ("identifier \"%\" already declared",
-                            ast.I.spelling, ast.position);
-
-    return null;
-  }
-  */
-   
-  public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object o) {
-    Declaration binding = (Declaration) ast.LI.visit(this, null);
-    if (binding == null) {
-      reportUndeclared (ast.LI.I);
-      return StdEnvironment.errorType;
-    } 
-    else if (! (binding instanceof TypeDeclaration)) {
-      reporter.reportError ("\"%\" is not a type identifier",
-                            ast.LI.I.spelling, ast.LI.position);
-      return StdEnvironment.errorType;
-    }
-    return ((TypeDeclaration) binding).T;
-  }
-  /*
-  public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object o) {
-    Declaration binding = (Declaration) ast.I.visit(this, null);
-    if (binding == null) {
-      reportUndeclared (ast.I);
-      return StdEnvironment.errorType;
-    } else if (! (binding instanceof TypeDeclaration)) {
-      reporter.reportError ("\"%\" is not a type identifier",
-                            ast.I.spelling, ast.I.position);
-      return StdEnvironment.errorType;
-    }
-    return ((TypeDeclaration) binding).T;
-  }
-  */
   
+   
+     // Program
+  
+    
      public Object visitSimpleProgram(SimpleProgram ast, Object o) {
          ast.C.visit(this, null);
          return null;
@@ -323,20 +253,24 @@ public final class Checker implements Visitor {
     */
      
 
-    
+  // Packages
+     
+     
   // @author        Ignacio
   // @descripcion   Modificacion visitPackageIdentifier 
-  // @funcionalidad Implementación visitPackageIdentifier
+  // @funcionalidad Implementaciï¿½n visitPackageIdentifier
   // @codigo        I.6
   public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {   
     return ast.I.visit(this, o);
   }
-  
+  //END CAMBIO IGNACIO
+
   // @author        Ignacio
   // @descripcion   Modificacion visitPackageIdentifier 
-  // @funcionalidad Implementación visitPackageIdentifier
+  // @funcionalidad Implementaciï¿½n visitPackageIdentifier
   // @codigo        I.8
   public Object visitPackageVname(PackageVname ast, Object o) {
+      
       VarTDDeclaration packageDeclaration = (VarTDDeclaration) ast.PI.visit(this,null);
       
       if(packageDeclaration != null){
@@ -349,7 +283,8 @@ public final class Checker implements Visitor {
           
           else if(ast.VN instanceof DotVarName){
               DotVarName var = (DotVarName)ast.VN;
-              variable = var.I.spelling;
+              SimpleVarName var2 = (SimpleVarName) var.V;
+              variable = var2.I.spelling;
           }
           else{
               SubscriptVarName var = (SubscriptVarName)ast.VN;
@@ -358,7 +293,8 @@ public final class Checker implements Visitor {
           }
           
           if(idTable.inPackage(packageId,variable)){
-            TypeDenoter vnType = (TypeDenoter) ast.VN.visit(this, null);
+            TypeDenoter vnType = (TypeDenoter) ast.VN.visit(this, packageId);
+            
             ast.variable = ast.VN.variable;
             return vnType;
           }
@@ -373,17 +309,18 @@ public final class Checker implements Visitor {
       return null;
       
   }
-  
+      //END CAMBIO IGNACIO
+
     // @author        Ignacio
     // @descripcion   Modificacion visitPackageIdentifier 
-    // @funcionalidad Implementación visitPackageIdentifier
+    // @funcionalidad Implementaciï¿½n visitPackageIdentifier
     // @codigo        I.7
     public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
        return ast.I.visit(this, null);
     }
     
     public Object visitPackageLongIdentifier(PackageLongIdentifier ast, Object o) {
-       return null;
+       return ast.I.visit(this, ast.PI.I.spelling);
     }
     
     public Object visitSinglePackageDeclaration(SinglePackageDeclaration ast, Object o) {
@@ -417,10 +354,43 @@ public final class Checker implements Visitor {
   // Commands
 
   // Always returns null. Does not use the given object.
+     
+  public Object visitCallCommand(CallCommand ast, Object o) {
+    Declaration binding = (Declaration) ast.LI.visit(this, null);
+    if (binding == null)
+      reportUndeclared(ast.LI.I);
+    else if (binding instanceof ProcDeclaration) {
+      ast.APS.visit(this, ((ProcDeclaration) binding).FPS);
+    } else if (binding instanceof ProcFormalParameter) {
+      ast.APS.visit(this, ((ProcFormalParameter) binding).FPS);
+    } else
+      reporter.reportError("\"%\" is not a procedure identifier",
+                           ast.LI.I.spelling, ast.LI.position);
+    return null;
+  }
+  /*
+  public Object visitCallCommand(CallCommand ast, Object o) {
+
+    Declaration binding = (Declaration) ast.I.visit(this, null);
+    if (binding == null)
+      reportUndeclared(ast.I);
+    else if (binding instanceof ProcDeclaration) {
+      ast.APS.visit(this, ((ProcDeclaration) binding).FPS);
+    } else if (binding instanceof ProcFormalParameter) {
+      ast.APS.visit(this, ((ProcFormalParameter) binding).FPS);
+    } else
+      reporter.reportError("\"%\" is not a procedure identifier",
+                           ast.I.spelling, ast.I.position);
+    return null;
+  }
+  */
 
   public Object visitAssignCommand(AssignCommand ast, Object o) {
+      
     TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    
+      
     if (!ast.V.variable)
       reporter.reportError ("LHS of assignment is not a variable", "", ast.V.position);
     if (! eType.equals(vType))
@@ -600,7 +570,26 @@ public final class Checker implements Visitor {
 
   // Returns the TypeDenoter denoting the type of the expression. Does
   // not use the given object.
-
+  
+  public Object visitCallExpression(CallExpression ast, Object o) {
+    Declaration binding = (Declaration) ast.LI.visit(this, null);
+      
+    if (binding == null) {
+      reportUndeclared(ast.LI.I);
+      ast.type = StdEnvironment.errorType;
+    } else if (binding instanceof FuncDeclaration) {
+      ast.APS.visit(this, ((FuncDeclaration) binding).FPS);
+      ast.type = ((FuncDeclaration) binding).T;
+    } else if (binding instanceof FuncFormalParameter) {
+      ast.APS.visit(this, ((FuncFormalParameter) binding).FPS);
+      ast.type = ((FuncFormalParameter) binding).T;
+    } else
+      reporter.reportError("\"%\" is not a function identifier",
+                           ast.LI.I.spelling, ast.LI.position);
+    return ast.type;
+  }
+ 
+  
   public Object visitArrayExpression(ArrayExpression ast, Object o) {
     TypeDenoter elemType = (TypeDenoter) ast.AA.visit(this, null);
     IntegerLiteral il = new IntegerLiteral(new Integer(ast.AA.elemCount).toString(),
@@ -675,6 +664,7 @@ public final class Checker implements Visitor {
   }
 
   public Object visitRecordExpression(RecordExpression ast, Object o) {
+    
     FieldTypeDenoter rType = (FieldTypeDenoter) ast.RA.visit(this, null);
     ast.type = new RecordTypeDenoter(rType, ast.position);
     return ast.type;
@@ -701,6 +691,7 @@ public final class Checker implements Visitor {
   }
 
   public Object visitVnameExpression(VnameExpression ast, Object o) {
+      
     ast.type = (TypeDenoter) ast.V.visit(this, null);
     return ast.type;
   }
@@ -847,6 +838,8 @@ public final class Checker implements Visitor {
   // given object.
 
   public Object visitMultipleRecordAggregate(MultipleRecordAggregate ast, Object o) {
+    
+      
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     FieldTypeDenoter rType = (FieldTypeDenoter) ast.RA.visit(this, null);
     TypeDenoter fType = checkFieldIdentifier(rType, ast.I);
@@ -1047,6 +1040,21 @@ public final class Checker implements Visitor {
 
   // Returns the expanded version of the TypeDenoter. Does not
   // use the given object.
+  
+  public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object o) {
+      
+    Declaration binding = (Declaration) ast.LI.visit(this, null);
+    if (binding == null) {
+      reportUndeclared (ast.LI.I);
+      return StdEnvironment.errorType;
+    } 
+    else if (! (binding instanceof TypeDeclaration)) {
+      reporter.reportError ("\"%\" is not a type identifier",
+                            ast.LI.I.spelling, ast.LI.position);
+      return StdEnvironment.errorType;
+    }
+    return ((TypeDeclaration) binding).T;
+  }
 
   public Object visitAnyTypeDenoter(AnyTypeDenoter ast, Object o) {
     return StdEnvironment.anyType;
@@ -1098,7 +1106,13 @@ public final class Checker implements Visitor {
   }
 
   public Object visitIdentifier(Identifier I, Object o) {
-    Declaration binding = idTable.retrieve(I.spelling);
+    Declaration binding;
+    if(o instanceof String){
+        binding = idTable.retrieveFromPackage(I.spelling,(String) o);
+    }
+    else
+        binding = idTable.retrieve(I.spelling);
+    
     if (binding != null)
       I.decl = binding;
     return binding;
@@ -1143,7 +1157,13 @@ public final class Checker implements Visitor {
   public Object visitSimpleVarName(SimpleVarName ast, Object o) {
     ast.variable = false;
     ast.type = StdEnvironment.errorType;
-    Declaration binding = (Declaration) ast.I.visit(this, null);
+    Declaration binding;
+    if (o instanceof String){
+        binding = (Declaration) ast.I.visit(this, o);
+    }
+    else
+        binding = (Declaration) ast.I.visit(this, null);
+    
     if (binding == null)
       reportUndeclared(ast.I);
     else
@@ -1151,7 +1171,9 @@ public final class Checker implements Visitor {
         ast.type = ((ConstDeclaration) binding).E.type;
         ast.variable = false;
       } else if (binding instanceof VarTDDeclaration) {
+          
         ast.type = ((VarTDDeclaration) binding).T;
+        VarTDDeclaration var = (VarTDDeclaration) binding;
         ast.variable = true;
       } else if (binding instanceof VarExpDeclaration) {
         ast.type = ((VarExpDeclaration) binding).T;
@@ -1174,6 +1196,8 @@ public final class Checker implements Visitor {
    // @funcionalidad Cambio en los metodos checker de comando de asignacion
    // @codigo        J.4
     public Object visitSimpleVname(SimpleVname ast, Object o) {
+      
+      
       TypeDenoter vnType = (TypeDenoter) ast.VN.visit(this, null);
       ast.variable = ast.VN.variable;
       return vnType;
@@ -1207,35 +1231,52 @@ public final class Checker implements Visitor {
     
     // END CAMBIO Joseph
     
-  // @author        Joseph
-  // @description   Cambio de vname por var name en el metodo checker de Subscript var name y dor var name
-  // @funcionalidad Cambio en los metodos checker de vname por var name
-  // @codigo        J.5
-  public Object visitDotVarName(DotVarName ast, Object o) {
-    ast.type = null;
-    TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
-    ast.variable = ast.V.variable;
-    if (! (vType instanceof RecordTypeDenoter))
-      reporter.reportError ("record expected here", "", ast.V.position);
-    else {
-      ast.type = checkFieldIdentifier(((RecordTypeDenoter) vType).FT, ast.I);
-      if (ast.type == StdEnvironment.errorType)
-        reporter.reportError ("no field \"%\" in this record type",
-                              ast.I.spelling, ast.I.position);
-    }
-    return ast.type;
+    // @author        Joseph
+    // @description   Cambio de vname por var name en el metodo checker de Subscript var name y dor var name
+    // @funcionalidad Cambio en los metodos checker de vname por var name
+    // @codigo        J.5
+    public Object visitDotVarName(DotVarName ast, Object o) {
+     
+        ast.type = null;
+
+        TypeDenoter vType;
+         if(o instanceof String)
+            vType = (TypeDenoter) ast.V.visit(this, o);
+
+         else
+            vType = (TypeDenoter) ast.V.visit(this, o);
+
+        ast.variable = ast.V.variable;
+        if (! (vType instanceof RecordTypeDenoter))
+          reporter.reportError ("record expected here", "", ast.V.position);
+        else {
+          ast.type = checkFieldIdentifier(((RecordTypeDenoter) vType).FT, ast.I);
+          if (ast.type == StdEnvironment.errorType)
+            reporter.reportError ("no field \"%\" in this record type",
+                                  ast.I.spelling, ast.I.position);
+        }
+        return ast.type;
    }
     
-  public Object visitSubscriptVarName(SubscriptVarName ast, Object o) {
-    TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null);
-    ast.variable = ast.V.variable;
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-    if (vType != StdEnvironment.errorType) {
-      if (! (vType instanceof ArrayTypeDenoter))
-        reporter.reportError ("array expected here", "", ast.V.position);
-        else {
-          if (! eType.equals(StdEnvironment.integerType))
-          reporter.reportError ("Integer expression expected here", "",
+    public Object visitSubscriptVarName(SubscriptVarName ast, Object o) {
+              
+
+        
+     TypeDenoter vType;
+     if(o instanceof String)
+        vType = (TypeDenoter) ast.V.visit(this, o);
+        
+     else
+        vType = (TypeDenoter) ast.V.visit(this, o);
+     
+     ast.variable = ast.V.variable;
+     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+     if (vType != StdEnvironment.errorType) {
+       if (! (vType instanceof ArrayTypeDenoter))
+         reporter.reportError ("array expected here", "", ast.V.position);
+       else {
+         if (! eType.equals(StdEnvironment.integerType))
+           reporter.reportError ("Integer expression expected here", "",
                                  ast.E.position);
           ast.type = ((ArrayTypeDenoter) vType).T;
         }

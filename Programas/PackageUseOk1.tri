@@ -1,17 +1,20 @@
-package myP ~ 
-	var a:= 2;
-	var z: Integer 
+package myP ~
+	var x := 9;
+	const y ~ 10;
+	func gallitoFinal (var param : Integer) : Integer ~ param
 end;
 
+let 
+	
+	var y := 'a';
+	var x := 9;
+	func gallitoNoFinal (var param : Integer) : Integer ~ param*param
+ 
+in
+	
+	x := gallitoFinal(var x)
 
-
-let var b: Integer in
-myZ $ y := 2 
 end
 
-package myZ ~ 
-	const a ~ 5;
-	var y:= myP $ a
-end;
 
 !OK

@@ -140,12 +140,13 @@ public final class IdentificationTable {
 
     entry = this.latest;
     while (searching) {
+      
       if (entry == null)
         searching = false;
-      else if (entry.id[1].equals(id)) {
-        present = true;
-        searching = false;
-        attr = entry.attr;
+      else if (entry.id[1].equals(id) && (isPackage(entry.id[0]))) {
+            present = true;
+            searching = false;
+            attr = entry.attr;
       } else
         entry = entry.previous;
     }
@@ -225,6 +226,35 @@ public final class IdentificationTable {
     }
     
     //END CAMBIO IGNACIO
+
+    Declaration retrieveFromPackage(String id, String packageName) {
+        IdEntry entry;
+        Declaration attr = null;
+        boolean present = false, searching = true;
+
+        entry = this.latest;
+        while (searching) {
+          if (entry == null)
+            searching = false;
+          else if (entry.id[1].equals(id) && entry.id[0].equals(packageName)) {
+            present = true;
+            searching = false;
+            attr = entry.attr;
+          } else
+            entry = entry.previous;
+        }
+
+        return attr;
+    }
+
+    private boolean isPackage(String string) {
+        if (string.equals("Ambient"))
+                return true;
+        if (string.substring(0, string.length() - 2).equals("Scope")) 
+            return true;
+        return false;
+    }
+
 
     
 }
