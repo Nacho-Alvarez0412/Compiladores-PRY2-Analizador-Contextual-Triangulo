@@ -1,12 +1,18 @@
 package myP ~
- 	var a: record y : Integer, x : Char end
+	var x := 9;
+	const y ~ 10;
+	func gallitoFinal (var param : Integer) : Integer ~ param
 end;
 
 let 
-	var b: record y : Char, x : Char end
+	
+	var y := 'a';
+	var x := 9;
+	func gallitoNoFinal (var param : Integer) : Integer ~ param*param
+ 
 in
-
-	myP$a.y := 7
+	
+	x := gallitoFinal(var x)
 
 end
 

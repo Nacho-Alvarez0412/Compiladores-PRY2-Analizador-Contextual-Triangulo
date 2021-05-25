@@ -149,7 +149,6 @@ public final class Checker implements Visitor {
   }
 
   public Object visitCallCommand(CallCommand ast, Object o) {
-
     Declaration binding = (Declaration) ast.LI.visit(this, null);
     if (binding == null)
       reportUndeclared(ast.LI.I);
@@ -281,6 +280,7 @@ public final class Checker implements Visitor {
     
   public Object visitCallExpression(CallExpression ast, Object o) {
     Declaration binding = (Declaration) ast.LI.visit(this, null);
+      
     if (binding == null) {
       reportUndeclared(ast.LI.I);
       ast.type = StdEnvironment.errorType;
@@ -439,7 +439,7 @@ public final class Checker implements Visitor {
     }
     
     public Object visitPackageLongIdentifier(PackageLongIdentifier ast, Object o) {
-       return null;
+       return ast.I.visit(this, ast.PI.I.spelling);
     }
     
     public Object visitSinglePackageDeclaration(SinglePackageDeclaration ast, Object o) {
@@ -1017,8 +1017,9 @@ public final class Checker implements Visitor {
 
   public Object visitIdentifier(Identifier I, Object o) {
     Declaration binding;
-    if(o instanceof String)
+    if(o instanceof String){
         binding = idTable.retrieveFromPackage(I.spelling,(String) o);
+    }
     else
         binding = idTable.retrieve(I.spelling);
     
