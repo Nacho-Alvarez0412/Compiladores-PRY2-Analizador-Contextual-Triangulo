@@ -148,35 +148,7 @@ public final class Checker implements Visitor {
       return null;
   }
 
-  public Object visitCallCommand(CallCommand ast, Object o) {
-    Declaration binding = (Declaration) ast.LI.visit(this, null);
-    if (binding == null)
-      reportUndeclared(ast.LI.I);
-    else if (binding instanceof ProcDeclaration) {
-      ast.APS.visit(this, ((ProcDeclaration) binding).FPS);
-    } else if (binding instanceof ProcFormalParameter) {
-      ast.APS.visit(this, ((ProcFormalParameter) binding).FPS);
-    } else
-      reporter.reportError("\"%\" is not a procedure identifier",
-                           ast.LI.I.spelling, ast.LI.position);
-    return null;
-  }
-  /*
-  public Object visitCallCommand(CallCommand ast, Object o) {
-
-    Declaration binding = (Declaration) ast.I.visit(this, null);
-    if (binding == null)
-      reportUndeclared(ast.I);
-    else if (binding instanceof ProcDeclaration) {
-      ast.APS.visit(this, ((ProcDeclaration) binding).FPS);
-    } else if (binding instanceof ProcFormalParameter) {
-      ast.APS.visit(this, ((ProcFormalParameter) binding).FPS);
-    } else
-      reporter.reportError("\"%\" is not a procedure identifier",
-                           ast.I.spelling, ast.I.position);
-    return null;
-  }
-  */
+ 
   public Object visitWhileLoopCommand(WhileLoopCommand ast, Object o) {
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     if (! eType.equals(StdEnvironment.booleanType))
@@ -278,83 +250,11 @@ public final class Checker implements Visitor {
         return null;
     }
     
-  public Object visitCallExpression(CallExpression ast, Object o) {
-    Declaration binding = (Declaration) ast.LI.visit(this, null);
-      
-    if (binding == null) {
-      reportUndeclared(ast.LI.I);
-      ast.type = StdEnvironment.errorType;
-    } else if (binding instanceof FuncDeclaration) {
-      ast.APS.visit(this, ((FuncDeclaration) binding).FPS);
-      ast.type = ((FuncDeclaration) binding).T;
-    } else if (binding instanceof FuncFormalParameter) {
-      ast.APS.visit(this, ((FuncFormalParameter) binding).FPS);
-      ast.type = ((FuncFormalParameter) binding).T;
-    } else
-      reporter.reportError("\"%\" is not a function identifier",
-                           ast.LI.I.spelling, ast.LI.position);
-    return ast.type;
-  }
-  /*
-  public Object visitCallExpression(CallExpression ast, Object o) {
-    Declaration binding = (Declaration) ast.I.visit(this, null);
-    if (binding == null) {
-      reportUndeclared(ast.I);
-      ast.type = StdEnvironment.errorType;
-    } else if (binding instanceof FuncDeclaration) {
-      ast.APS.visit(this, ((FuncDeclaration) binding).FPS);
-      ast.type = ((FuncDeclaration) binding).T;
-    } else if (binding instanceof FuncFormalParameter) {
-      ast.APS.visit(this, ((FuncFormalParameter) binding).FPS);
-      ast.type = ((FuncFormalParameter) binding).T;
-    } else
-      reporter.reportError("\"%\" is not a function identifier",
-                           ast.I.spelling, ast.I.position);
-    return ast.type;
-  }
-  */
- 
-  /*
-  public Object visitVarDeclaration(VarDeclaration ast, Object o) {
-    ast.T = (TypeDenoter) ast.T.visit(this, null);
-    idTable.enter (ast.I.spelling, ast);
-    if (ast.duplicated)
-      reporter.reportError ("identifier \"%\" already declared",
-                            ast.I.spelling, ast.position);
-
-    return null;
-  }
-  */
-   
-  public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object o) {
-      
-    Declaration binding = (Declaration) ast.LI.visit(this, null);
-    if (binding == null) {
-      reportUndeclared (ast.LI.I);
-      return StdEnvironment.errorType;
-    } 
-    else if (! (binding instanceof TypeDeclaration)) {
-      reporter.reportError ("\"%\" is not a type identifier",
-                            ast.LI.I.spelling, ast.LI.position);
-      return StdEnvironment.errorType;
-    }
-    return ((TypeDeclaration) binding).T;
-  }
-  /*
-  public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object o) {
-    Declaration binding = (Declaration) ast.I.visit(this, null);
-    if (binding == null) {
-      reportUndeclared (ast.I);
-      return StdEnvironment.errorType;
-    } else if (! (binding instanceof TypeDeclaration)) {
-      reporter.reportError ("\"%\" is not a type identifier",
-                            ast.I.spelling, ast.I.position);
-      return StdEnvironment.errorType;
-    }
-    return ((TypeDeclaration) binding).T;
-  }
-  */
   
+   
+     // Program
+  
+    
      public Object visitSimpleProgram(SimpleProgram ast, Object o) {
          ast.C.visit(this, null);
          return null;
@@ -374,7 +274,9 @@ public final class Checker implements Visitor {
     */
      
 
-    
+  // Packages
+     
+     
   // @author        Ignacio
   // @descripcion   Modificacion visitPackageIdentifier 
   // @funcionalidad Implementación visitPackageIdentifier
@@ -469,6 +371,36 @@ public final class Checker implements Visitor {
   // Commands
 
   // Always returns null. Does not use the given object.
+     
+  public Object visitCallCommand(CallCommand ast, Object o) {
+    Declaration binding = (Declaration) ast.LI.visit(this, null);
+    if (binding == null)
+      reportUndeclared(ast.LI.I);
+    else if (binding instanceof ProcDeclaration) {
+      ast.APS.visit(this, ((ProcDeclaration) binding).FPS);
+    } else if (binding instanceof ProcFormalParameter) {
+      ast.APS.visit(this, ((ProcFormalParameter) binding).FPS);
+    } else
+      reporter.reportError("\"%\" is not a procedure identifier",
+                           ast.LI.I.spelling, ast.LI.position);
+    return null;
+  }
+  /*
+  public Object visitCallCommand(CallCommand ast, Object o) {
+
+    Declaration binding = (Declaration) ast.I.visit(this, null);
+    if (binding == null)
+      reportUndeclared(ast.I);
+    else if (binding instanceof ProcDeclaration) {
+      ast.APS.visit(this, ((ProcDeclaration) binding).FPS);
+    } else if (binding instanceof ProcFormalParameter) {
+      ast.APS.visit(this, ((ProcFormalParameter) binding).FPS);
+    } else
+      reporter.reportError("\"%\" is not a procedure identifier",
+                           ast.I.spelling, ast.I.position);
+    return null;
+  }
+  */
 
   public Object visitAssignCommand(AssignCommand ast, Object o) {
       
@@ -514,7 +446,26 @@ public final class Checker implements Visitor {
 
   // Returns the TypeDenoter denoting the type of the expression. Does
   // not use the given object.
-
+  
+  public Object visitCallExpression(CallExpression ast, Object o) {
+    Declaration binding = (Declaration) ast.LI.visit(this, null);
+      
+    if (binding == null) {
+      reportUndeclared(ast.LI.I);
+      ast.type = StdEnvironment.errorType;
+    } else if (binding instanceof FuncDeclaration) {
+      ast.APS.visit(this, ((FuncDeclaration) binding).FPS);
+      ast.type = ((FuncDeclaration) binding).T;
+    } else if (binding instanceof FuncFormalParameter) {
+      ast.APS.visit(this, ((FuncFormalParameter) binding).FPS);
+      ast.type = ((FuncFormalParameter) binding).T;
+    } else
+      reporter.reportError("\"%\" is not a function identifier",
+                           ast.LI.I.spelling, ast.LI.position);
+    return ast.type;
+  }
+ 
+  
   public Object visitArrayExpression(ArrayExpression ast, Object o) {
     TypeDenoter elemType = (TypeDenoter) ast.AA.visit(this, null);
     IntegerLiteral il = new IntegerLiteral(new Integer(ast.AA.elemCount).toString(),
@@ -965,6 +916,21 @@ public final class Checker implements Visitor {
 
   // Returns the expanded version of the TypeDenoter. Does not
   // use the given object.
+  
+  public Object visitSimpleTypeDenoter(SimpleTypeDenoter ast, Object o) {
+      
+    Declaration binding = (Declaration) ast.LI.visit(this, null);
+    if (binding == null) {
+      reportUndeclared (ast.LI.I);
+      return StdEnvironment.errorType;
+    } 
+    else if (! (binding instanceof TypeDeclaration)) {
+      reporter.reportError ("\"%\" is not a type identifier",
+                            ast.LI.I.spelling, ast.LI.position);
+      return StdEnvironment.errorType;
+    }
+    return ((TypeDeclaration) binding).T;
+  }
 
   public Object visitAnyTypeDenoter(AnyTypeDenoter ast, Object o) {
     return StdEnvironment.anyType;
