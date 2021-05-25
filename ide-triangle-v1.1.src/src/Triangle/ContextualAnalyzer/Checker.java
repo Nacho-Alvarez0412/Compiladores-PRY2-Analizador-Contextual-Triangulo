@@ -137,21 +137,6 @@ public final class Checker implements Visitor {
 //////////////////////////////////////////////////////////////////////////
   
 
-
-  public Object visitCallCommand(CallCommand ast, Object o) {
-
-    Declaration binding = (Declaration) ast.LI.visit(this, null);
-    if (binding == null)
-      reportUndeclared(ast.LI.I);
-    else if (binding instanceof ProcDeclaration) {
-      ast.APS.visit(this, ((ProcDeclaration) binding).FPS);
-    } else if (binding instanceof ProcFormalParameter) {
-      ast.APS.visit(this, ((ProcFormalParameter) binding).FPS);
-    } else
-      reporter.reportError("\"%\" is not a procedure identifier",
-                           ast.LI.I.spelling, ast.LI.position);
-    return null;
-  }
   /*
   public Object visitCallCommand(CallCommand ast, Object o) {
 

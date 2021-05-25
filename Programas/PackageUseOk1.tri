@@ -12,7 +12,7 @@ let
  
 in
 	
-	x := gallitoFinal(var x)
+	x := myP$gallitoFinal(var x)
 
 end
 
