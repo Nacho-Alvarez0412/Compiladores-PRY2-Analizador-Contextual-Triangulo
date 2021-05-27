@@ -109,8 +109,8 @@ public class IDECompiler {
         // END CAMBIO Andres
         
         // @author        Ignacio
-        // @descripcion   Análisis contextual
-        // @funcionalidad Análisis contextual
+        // @descripcion   Anï¿½lisis contextual
+        // @funcionalidad Anï¿½lisis contextual
         // @codigo        I.3
         
         if(report.numErrors == 0){
