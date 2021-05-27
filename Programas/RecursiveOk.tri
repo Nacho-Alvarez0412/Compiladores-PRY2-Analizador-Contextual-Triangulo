@@ -1,0 +1,18 @@
+let
+	recursive
+		func doble(var i : Integer) : Integer ~
+			triplicar(i)/3*2
+		|
+		proc triplicar(var i : Integer) ~
+			i := i + doble(i)
+		end
+		|
+		proc sumar(var i : Integer) ~
+			i := i + 1
+		end
+	end
+in
+	nothing
+end
+
+! OK
