@@ -150,18 +150,27 @@ public final class Checker implements Visitor {
    */
 
   public Object visitProcedure(Procedure ast, Object o) {
+    ProcDeclaration procedureDeclaration = new ProcDeclaration(ast.I,ast.FPS,ast.C,ast.position);
+    procedureDeclaration.visit(this, null);
+    //idTable.enter(procedureDeclaration.I.spelling, procedureDeclaration);
     return null;
   }
 
   public Object visitFunction(Function ast, Object o) {
+    FuncDeclaration funcDeclaration = new FuncDeclaration(ast.I,ast.FPS,ast.TD,ast.E,ast.position);
+    funcDeclaration.visit(this, null);
+      
     return null;
   }
 
   public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
+    ast.PF1.visit(this,null);
+    ast.PF2.visit(this,null);
     return null;
   }
 
   public Object visitRecDeclaration(RecDeclaration ast, Object o) {
+    ast.PFs.visit(this,null);
     return null;
   }
 
