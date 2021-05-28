@@ -38,4 +38,9 @@ public class BinaryOperatorDeclaration extends Declaration {
 
   public Operator O;
   public TypeDenoter ARG1, ARG2, RES;
+
+    @Override
+    public Object visit2(Visitor v, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

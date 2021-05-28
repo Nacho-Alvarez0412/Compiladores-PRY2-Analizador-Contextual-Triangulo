@@ -36,6 +36,10 @@ public class FuncDeclaration extends SingleDeclaration {
   public Object visit (Visitor v, Object o) {
     return v.visitFuncDeclaration(this, o);
   }
+  
+  public Object visit2(Visitor v, Object o) {
+    return v.visitFuncDeclaration2(this, o);
+  }
 
   public Object visitXML(Visitor v, Object o) {
     return v.visitFuncDeclaration(this, o);

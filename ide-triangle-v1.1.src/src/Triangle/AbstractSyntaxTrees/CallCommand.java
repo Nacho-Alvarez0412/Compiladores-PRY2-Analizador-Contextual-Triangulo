@@ -39,6 +39,11 @@ public class CallCommand extends Command {
 
   public LongIdentifier LI;
   public ActualParameterSequence APS;
+
+    @Override
+    public Object visit2(Visitor v, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
 /*J.64
 public class CallCommand extends Command {

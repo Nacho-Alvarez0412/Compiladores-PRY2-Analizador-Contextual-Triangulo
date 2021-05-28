@@ -32,4 +32,9 @@ public class SequentialCase extends Case {
     
     public Case C1;
     public Case C2;
+
+    @Override
+    public Object visit2(Visitor v, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

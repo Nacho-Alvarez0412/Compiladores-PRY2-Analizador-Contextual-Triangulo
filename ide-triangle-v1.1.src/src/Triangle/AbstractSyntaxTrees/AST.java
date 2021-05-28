@@ -31,6 +31,7 @@ public abstract class AST {
   }
 
   public abstract Object visit(Visitor v, Object o);
+  public abstract Object visit2(Visitor v, Object o);
   public abstract Object visitXML(Visitor v, Object o);
 
   public SourcePosition	position;

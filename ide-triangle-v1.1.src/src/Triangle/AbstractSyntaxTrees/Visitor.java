@@ -38,7 +38,9 @@ public interface Visitor {
   public abstract Object visitForLoopWhileCommand(ForLoopWhileCommand ast, Object o);
   public abstract Object visitForLoopUntilCommand(ForLoopUntilCommand ast, Object o);
   public abstract Object visitProcedure(Procedure ast, Object o);
+  public abstract Object visitProcedure2(Procedure ast, Object o);
   public abstract Object visitFunction(Function ast, Object o);
+  public abstract Object visitFunction2(Function ast, Object o);
   public abstract Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o);
   public abstract Object visitChooseCommand(ChooseCommand ast, Object o);
   public abstract Object visitForFromCommand(ForFromCommand ast, Object o);
@@ -102,7 +104,9 @@ public interface Visitor {
   public abstract Object visitBinaryOperatorDeclaration(BinaryOperatorDeclaration ast, Object o);
   public abstract Object visitConstDeclaration(ConstDeclaration ast, Object o);
   public abstract Object visitFuncDeclaration(FuncDeclaration ast, Object o);
+  public abstract Object visitFuncDeclaration2(FuncDeclaration ast, Object o);
   public abstract Object visitProcDeclaration(ProcDeclaration ast, Object o);
+  public abstract Object visitProcDeclaration2(ProcDeclaration ast, Object o);
   public abstract Object visitSequentialDeclaration(SequentialDeclaration ast, Object o);
   public abstract Object visitTypeDeclaration(TypeDeclaration ast, Object o);
   public abstract Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o);

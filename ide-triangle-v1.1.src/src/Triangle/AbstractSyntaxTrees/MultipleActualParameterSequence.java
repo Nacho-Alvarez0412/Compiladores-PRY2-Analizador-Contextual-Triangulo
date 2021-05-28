@@ -35,4 +35,9 @@ public class MultipleActualParameterSequence extends ActualParameterSequence {
 
   public ActualParameter AP;
   public ActualParameterSequence APS;
+
+    @Override
+    public Object visit2(Visitor v, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

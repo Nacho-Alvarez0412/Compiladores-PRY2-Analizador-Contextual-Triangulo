@@ -37,4 +37,9 @@ public class MultipleRecordAggregate extends RecordAggregate {
   public Identifier I;
   public Expression E;
   public RecordAggregate RA;
+
+    @Override
+    public Object visit2(Visitor v, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

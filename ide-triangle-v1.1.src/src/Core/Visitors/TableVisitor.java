@@ -611,6 +611,8 @@ public class TableVisitor implements Visitor {
                     -1);
         } catch (NullPointerException e) {
         }
+        
+        System.out.println(ast.FPS);
 
         ast.FPS.visit(this, null);
         ast.C.visit(this, null);
@@ -1140,4 +1142,24 @@ public class TableVisitor implements Visitor {
   // <editor-fold defaultstate="collapsed" desc=" Attributes ">
     private DefaultTableModel model;
     // </editor-fold>
+
+    @Override
+    public Object visitFuncDeclaration2(FuncDeclaration ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitProcDeclaration2(ProcDeclaration ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitProcedure2(Procedure ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitFunction2(Function ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

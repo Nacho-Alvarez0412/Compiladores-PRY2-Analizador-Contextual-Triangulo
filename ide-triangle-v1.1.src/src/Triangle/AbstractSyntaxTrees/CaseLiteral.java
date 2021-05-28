@@ -29,5 +29,10 @@ public class CaseLiteral extends AST {
     }
     
     public Terminal T;
+
+    @Override
+    public Object visit2(Visitor v, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

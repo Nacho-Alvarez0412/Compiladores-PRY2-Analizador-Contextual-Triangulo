@@ -6,6 +6,7 @@
  */
 package Triangle.AbstractSyntaxTrees;
 
+import Triangle.ContextualAnalyzer.Checker;
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public abstract class ProcFuncs extends AST {

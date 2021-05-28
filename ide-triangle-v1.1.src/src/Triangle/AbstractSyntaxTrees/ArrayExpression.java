@@ -35,4 +35,9 @@ public class ArrayExpression extends Expression {
   public Object visitXML(Visitor v, Object o) {
     return v.visitArrayExpression(this, o);
   }
+
+    @Override
+    public Object visit2(Visitor v, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
