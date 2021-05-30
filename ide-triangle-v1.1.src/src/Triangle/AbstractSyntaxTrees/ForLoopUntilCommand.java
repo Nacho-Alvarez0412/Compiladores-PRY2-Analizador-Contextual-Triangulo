@@ -28,5 +28,10 @@ public class ForLoopUntilCommand extends Command {
   public ForFromCommand FFC;
   public Expression E1,E2;
   public Command C;
+
+    @Override
+    public Object visit2(Visitor v, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
   
 }

@@ -33,4 +33,9 @@ public class SingleActualParameterSequence extends ActualParameterSequence {
   }
 
   public ActualParameter AP;
+
+    @Override
+    public Object visit2(Visitor v, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

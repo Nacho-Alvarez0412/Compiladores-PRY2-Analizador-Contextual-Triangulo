@@ -34,6 +34,9 @@ public class ProcDeclaration extends SingleDeclaration {
   public Object visit (Visitor v, Object o) {
     return v.visitProcDeclaration(this, o);
   }
+  public Object visit2(Visitor v, Object o) {
+    return v.visitProcDeclaration2(this, o);
+  }
 
   public Object visitXML(Visitor v, Object o) {
     return v.visitProcDeclaration(this, o);

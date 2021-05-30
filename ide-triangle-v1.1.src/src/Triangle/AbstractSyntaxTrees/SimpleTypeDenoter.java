@@ -41,6 +41,11 @@ public class SimpleTypeDenoter extends TypeDenoter {
   }
 
   public LongIdentifier LI;
+
+    @Override
+    public Object visit2(Visitor v, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
 
 /* J.63

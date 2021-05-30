@@ -20,6 +20,10 @@ public class Procedure extends ProcFunc {
   public Object visit(Visitor v, Object o) {
     return v.visitProcedure(this, o);
   }
+  
+  public Object visit2(Visitor v, Object o) {
+    return v.visitProcedure2(this, o);
+  }
 
   public Object visitXML(Visitor v, Object o) {
     return v.visitProcedure(this, o);

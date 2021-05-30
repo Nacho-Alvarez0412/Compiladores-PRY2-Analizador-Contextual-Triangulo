@@ -54,4 +54,9 @@ public class WhileLoopCommand extends Command {
   //END CAMBIO Joseph
   public Expression E;
   public Command C;
+
+    @Override
+    public Object visit2(Visitor v, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

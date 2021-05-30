@@ -150,18 +150,59 @@ public final class Checker implements Visitor {
    */
 
   public Object visitProcedure(Procedure ast, Object o) {
+      System.out.println("holis");
+      System.out.println(ast.I.spelling);
+    ProcDeclaration procedureDeclaration = new ProcDeclaration(ast.I,ast.FPS,ast.C,ast.position);
+    
+    //procedureDeclaration.visit2(this, null);
+    //idTable.enter(procedureDeclaration.I.spelling, procedureDeclaration);
+    return procedureDeclaration.visit(this, null);
+  }
+  public Object visitProcedure2(ProcDeclaration ast, Object o) {
+      System.out.println(ast.I.spelling);
+      
+    //ProcDeclaration procedureDeclaration = new ProcDeclaration(ast.I,ast.FPS,ast.C,ast.position);
+    ast.visit2(this, null);   
+    //idTable.enter(procedureDeclaration.I.spelling, procedureDeclaration);
     return null;
   }
 
   public Object visitFunction(Function ast, Object o) {
+    System.out.println("holisew");
+    System.out.println(ast.I.spelling);
+    FuncDeclaration funcDeclaration = new FuncDeclaration(ast.I,ast.FPS,ast.TD,ast.E,ast.position);
+    
+    //funcDeclaration
+      
+    return funcDeclaration.visit(this, null);
+  }
+  public Object visitFunction2(FuncDeclaration ast, Object o) {
+      System.out.println("qdw");
+      System.out.println(ast.I.spelling);
+    //FuncDeclaration funcDeclaration = new FuncDeclaration(ast.I,ast.FPS,ast.TD,ast.E,ast.position);
+     ast.visit2(this, null);
+    //funcDeclaration
+      
     return null;
   }
 
   public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
+      
+    idTable.openScope();
+    Object currentAst = ast.PF1.visit(this,null);
+    Object currentAst2 = ast.PF2.visit(this,null);
+    System.out.println(currentAst);
+    System.out.println(currentAst2);
+    System.out.println("yea");
+    //this.visitFuncDeclaration2((FuncDeclaration) currentAst,null);
+    //this.visitProcDeclaration2((ProcDeclaration) currentAst2, null);
+    System.out.println("yea2");
+    
     return null;
   }
 
   public Object visitRecDeclaration(RecDeclaration ast, Object o) {
+    ast.PFs.visit(this,null);
     return null;
   }
 
@@ -707,7 +748,8 @@ public final class Checker implements Visitor {
     } else if (binding instanceof FuncFormalParameter) {
       ast.APS.visit(this, ((FuncFormalParameter) binding).FPS);
       ast.type = ((FuncFormalParameter) binding).T;
-    } else
+    } 
+    else
       reporter.reportError("\"%\" is not a function identifier", ast.LI.I.spelling, ast.LI.position);
     return ast.type;
   }
@@ -731,6 +773,7 @@ public final class Checker implements Visitor {
       if (!(binding instanceof BinaryOperatorDeclaration))
         reporter.reportError("\"%\" is not a binary operator", ast.O.spelling, ast.O.position);
       BinaryOperatorDeclaration bbinding = (BinaryOperatorDeclaration) binding;
+        System.out.println(bbinding.ARG1);
       if (bbinding.ARG1 == StdEnvironment.anyType) {
         // this operator must be "=" or "\="
         if (!e1Type.equals(e2Type))
@@ -873,13 +916,35 @@ public final class Checker implements Visitor {
       reporter.reportError("identifier \"%\" already declared", ast.I.spelling, ast.position);
     return null;
   }
-
+  
   public Object visitFuncDeclaration(FuncDeclaration ast, Object o) {
-    ast.T = (TypeDenoter) ast.T.visit(this, null);
+      
+      System.out.println("soy io");
+      
+      System.out.println(ast);
+    //ast.T = (TypeDenoter) ast.T.visit(this, null);
     idTable.enter(ast.I.spelling, ast); // permits recursion
     if (ast.duplicated)
       reporter.reportError("identifier \"%\" already declared", ast.I.spelling, ast.position);
     idTable.openScope();
+    ast.FPS.visit(this, null);
+    //TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    idTable.closeScope();
+    /*if (!ast.T.equals(eType))
+      reporter.reportError("body of function \"%\" has wrong type", ast.I.spelling, ast.E.position);*/
+    
+      System.out.println(ast);
+
+    return ast;
+  }
+
+  public Object visitFuncDeclaration2(FuncDeclaration ast, Object o) {
+      System.out.println("type denoteeer");
+     ast.T = (TypeDenoter) ast.T.visit(this, null);
+    /*idTable.enter(ast.I.spelling, ast); // permits recursion
+    if (ast.duplicated)
+      reporter.reportError("identifier \"%\" already declared", ast.I.spelling, ast.position);*/
+    //idTable.openScope();
     ast.FPS.visit(this, null);
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     idTable.closeScope();
@@ -887,6 +952,7 @@ public final class Checker implements Visitor {
       reporter.reportError("body of function \"%\" has wrong type", ast.I.spelling, ast.E.position);
     return null;
   }
+  
 
   public Object visitProcDeclaration(ProcDeclaration ast, Object o) {
     idTable.enter(ast.I.spelling, ast); // permits recursion
@@ -894,7 +960,20 @@ public final class Checker implements Visitor {
       reporter.reportError("identifier \"%\" already declared", ast.I.spelling, ast.position);
     idTable.openScope();
     ast.FPS.visit(this, null);
+    //ast.C.visit(this, null);
+    idTable.closeScope();
+    //this.visitProcDeclaration2(ast, null);
+    return ast;
+  }
+  
+  public Object visitProcDeclaration2(ProcDeclaration ast, Object o) {
+    /*idTable.enter(ast.I.spelling, ast); // permits recursion
+    if (ast.duplicated)
+      reporter.reportError("identifier \"%\" already declared", ast.I.spelling, ast.position);*/
+    idTable.openScope();
+    ast.FPS.visit(this, null);
     ast.C.visit(this, null);
+    
     idTable.closeScope();
     return null;
   }
@@ -1136,6 +1215,7 @@ public final class Checker implements Visitor {
       reporter.reportError("\"%\" is not a type identifier", ast.LI.I.spelling, ast.LI.position);
       return StdEnvironment.errorType;
     }
+      System.out.println(((TypeDeclaration) binding).T);
     return ((TypeDeclaration) binding).T;
   }
 
@@ -1559,4 +1639,14 @@ public final class Checker implements Visitor {
         StdEnvironment.booleanType);
 
   }
+
+    @Override
+    public Object visitProcedure2(Procedure ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitFunction2(Function ast, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

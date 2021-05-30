@@ -34,4 +34,9 @@ public class Identifier extends Terminal {
 
   public TypeDenoter type;
   public AST decl; // Either a Declaration or a FieldTypeDenoter
+
+    @Override
+    public Object visit2(Visitor v, Object o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
