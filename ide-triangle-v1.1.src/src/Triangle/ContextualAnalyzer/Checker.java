@@ -1089,8 +1089,6 @@ public final class Checker implements Visitor {
   public Object visitConstActualParameter(ConstActualParameter ast, Object o) {
     FormalParameter fp = (FormalParameter) o;
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-    TypeDenoter temp = ((ConstFormalParameter) fp).T;
-
     if (!(fp instanceof ConstFormalParameter))
       reporter.reportError("const actual parameter not expected here", "", ast.position);
     else if (!this.recursion && !eType.equals(((ConstFormalParameter) fp).T))
