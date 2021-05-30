@@ -1,0 +1,12 @@
+package myP ~ 
+	const a ~ 1
+end;
+let
+	var b: Integer
+in
+	b := 1;
+	getint(var myP $ a)
+
+end
+
+!Error: Intenta acceder a constante declarada en myP y pasarla por variable (referencia)

@@ -1,0 +1,9 @@
+let
+  var x : array 5 of Entero; !error de type denoter
+  var i : Integer
+
+in
+   nothing ;
+   puteol()
+
+end 

@@ -1,0 +1,21 @@
+! Declaraciones con parámetros repetidos
+
+
+let
+
+  recursive
+
+    func f (a : Integer): Integer ~ 1
+
+    |
+
+    func g (b : Boolean , x : Integer , b : Char): Integer ~ 2 ! b repetido 
+
+  end
+
+in
+
+  putint(f(10))
+
+end
+ 

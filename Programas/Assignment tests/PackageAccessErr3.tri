@@ -1,0 +1,12 @@
+package myP ~ 
+	var a: Integer
+end;
+let
+	var b: Integer
+in
+	b := 1;
+	put(myP $ c)
+
+end
+
+!Error: Intenta acceder a un componente (c) no declarado en myP 

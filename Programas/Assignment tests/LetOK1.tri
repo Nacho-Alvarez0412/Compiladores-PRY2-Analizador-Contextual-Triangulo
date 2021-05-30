@@ -1,0 +1,8 @@
+
+let
+  var n := 1
+in
+
+  putint(n) ! sin error, variable declarada con inicialización e inferencia del tipo
+
+end

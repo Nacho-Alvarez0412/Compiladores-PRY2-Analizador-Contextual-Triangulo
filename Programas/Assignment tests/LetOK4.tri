@@ -1,0 +1,18 @@
+!  lets anidados
+let
+
+  var a := 1 ! debe inferir que a : Integer
+
+in
+
+  let
+    const b ~ a ;
+    var   a := b + 1 ! debe inferir que nueva a : Integer
+  in
+    putint (a) ! debe imprimir 2
+  end
+
+end
+ 
+
+

@@ -1,0 +1,12 @@
+package myP ~ 
+	var a: Integer
+end;
+let
+	var b: Integer
+in
+	b := 1;
+	put(myP $ a)
+
+end
+
+!Error: Intenta imprimir como Char a un Integer 

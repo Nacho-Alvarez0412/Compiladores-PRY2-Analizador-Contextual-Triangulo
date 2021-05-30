@@ -1,0 +1,14 @@
+
+let
+
+  private
+    const a ~ 1
+  in
+    const b ~ a + 1 ! a visible aquí
+  end
+
+in
+
+  putint(b) ! b visible aquí
+
+end

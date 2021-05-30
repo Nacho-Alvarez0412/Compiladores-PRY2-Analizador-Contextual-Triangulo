@@ -1,0 +1,11 @@
+
+let
+
+  var x := 1
+
+in
+
+  x := true ! x es una variable entera
+
+end
+ 

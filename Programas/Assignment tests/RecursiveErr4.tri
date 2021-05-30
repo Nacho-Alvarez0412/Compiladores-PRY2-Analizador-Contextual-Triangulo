@@ -1,0 +1,24 @@
+! Declaraciones mutuamente recursivas, con errores de tipo 
+
+
+let
+
+  recursive
+
+    func f (a : Integer): Integer ~
+      if a > 0 then
+        g(a - 1)
+      else
+        0
+		! g espera un booleano, no un entero
+    |
+    func g (b : Boolean): Integer ~ if b then f(1) else 0
+
+  end
+
+in
+
+  putint(f(10))
+
+end
+ 

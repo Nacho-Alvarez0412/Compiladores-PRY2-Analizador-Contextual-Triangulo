@@ -1,0 +1,12 @@
+! prueba arreglo sencilla
+
+let
+  var x : array 5 of Integer ;
+  var i : Integer
+
+in
+
+  x := [10, 20, 30, 40, 50] ;
+  i := 0 
+
+end

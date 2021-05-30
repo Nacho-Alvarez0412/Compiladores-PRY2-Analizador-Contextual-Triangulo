@@ -1,0 +1,15 @@
+! error en segundo if
+
+let
+
+  var a : Integer
+
+in 
+  if a > 2 then 
+    put ('2')
+  elsif a = m then ! error: m no declarada
+      put ('0')
+  else
+      put ('1')
+  end ! del if
+end ! del let

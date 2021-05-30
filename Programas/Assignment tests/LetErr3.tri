@@ -1,0 +1,10 @@
+let
+
+  const a ~ 1
+
+in
+
+  getint(var a) ! debe dar un error, a es una constante 
+
+end
+

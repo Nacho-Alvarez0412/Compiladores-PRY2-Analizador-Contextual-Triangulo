@@ -1,0 +1,17 @@
+! Revisa el tipo de declaracion Rec - varias alternativas
+
+let
+
+recursive
+
+  proc a() ~ put('Z') end 
+  |
+  func b() : Integer ~ 5
+  |
+  proc c() ~ putint (0) end
+
+end
+
+in
+  putint(1)
+end

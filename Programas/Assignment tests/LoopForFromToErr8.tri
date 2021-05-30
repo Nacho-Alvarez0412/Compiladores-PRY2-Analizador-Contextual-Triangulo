@@ -1,0 +1,15 @@
+let
+
+  var k : Boolean
+
+in
+
+  loop for i from 1 to k do ! k debería ser entera
+
+    k := k + 1 ; 
+
+    putint (1) ! debe imprimir 10 unos, si no hubiera otro error
+
+  end
+
+end

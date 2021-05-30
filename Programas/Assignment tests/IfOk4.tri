@@ -1,0 +1,15 @@
+! if then else end, nueva sintaxis 
+
+let
+
+  var a : Integer
+
+in
+  getint (var a);
+  if a > 0 then 
+    put ('M')
+  else
+    put ('m')
+  end ! del if
+
+end ! del let

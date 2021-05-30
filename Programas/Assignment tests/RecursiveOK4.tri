@@ -1,0 +1,21 @@
+! Funciones mutuamente recursivas, anterior ve a posterior
+
+
+let
+
+  recursive
+
+    func f (a : Integer): Integer ~ 1 + g(a - 1)
+
+    |
+
+    func g (b : Integer): Integer ~ 1
+
+  end
+
+in
+
+  putint(f(10))
+
+end
+ 

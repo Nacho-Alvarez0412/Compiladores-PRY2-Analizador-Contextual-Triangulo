@@ -1,0 +1,8 @@
+let
+  var x := 1
+in
+  putint (x); ! debe imprimir 1
+  puteol ();
+  getint (var x); ! variable puede ser pasada por referencia
+  putint (x)  ! debe imprimir lo que se ingresó
+end

@@ -1,0 +1,15 @@
+! if then else end, nueva sintaxis
+! error en else comando
+
+let
+
+  var a : Integer
+
+in 
+  if a > 0 then 
+    put ('M')
+  else
+    put (m) ! error: m no está declarado
+  end ! del if 
+
+end ! del let

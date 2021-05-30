@@ -1,0 +1,25 @@
+! Procedimientos mutuamente recursivos, más uno auxiliar que está adelante
+! Error es la ocurrencia aplicada de x en Pong. x no está visible allí
+
+
+let
+
+  recursive
+
+    proc Ping (x : Integer) ~ if x > 0 then Impr ('I') ; Pong (x - 1) else nothing end end
+
+    |
+
+    proc Pong (a : Integer) ~ if x > 0 then Impr ('0') ; Ping (a - 1) else nothing end end  ! x no debe ser visible en Pong
+
+    |
+
+    proc Impr (c : Char) ~ put (c) end
+
+  end
+
+in
+
+  Ping (4)
+
+end

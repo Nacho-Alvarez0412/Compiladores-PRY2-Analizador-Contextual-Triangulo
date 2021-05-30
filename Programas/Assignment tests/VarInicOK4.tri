@@ -1,0 +1,16 @@
+let
+
+  var x := 1
+
+in
+
+  putint (x); ! debe imprimir 1
+
+  puteol ();
+
+  x := x + 21 ; ! variable puede ser asignada
+
+  putint (x)  ! debe imprimir 22
+
+end
+

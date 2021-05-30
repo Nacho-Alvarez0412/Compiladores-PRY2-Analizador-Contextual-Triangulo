@@ -1,0 +1,13 @@
+let
+
+  var k : Boolean
+
+in
+
+  loop for i from k to 10 until i > 5 do ! k debe ser entera
+
+    putint (1) ! debe imprimir 4 unos, con k = 1 y si no hubiera otro error...
+
+  end
+
+end

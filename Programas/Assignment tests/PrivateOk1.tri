@@ -1,0 +1,13 @@
+let
+	private
+		const a ~ 5;
+		var b := 15
+	in
+		var c := a*b*2 ! a y b visibles aquí
+	end;
+	var d := 5
+in
+	putint(c + d) ! c y d visibles aquí
+end
+
+! Ok

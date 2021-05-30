@@ -1,0 +1,20 @@
+! Procedimientos mutuamente recursivos
+
+
+let
+
+  recursive
+
+    proc Ping (x : Integer) ~ if x > 0 then put ('I') ; Pong (x - 1) else nothing end end
+
+    |
+
+    proc Pong (a : Integer) ~ if a > 0 then put ('0') ; Ping (a - 1) else nothing end end
+
+  end
+
+in
+
+  Ping (4)
+
+end

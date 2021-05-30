@@ -1,0 +1,7 @@
+
+let
+  var x := 1 * 3 + 2
+
+in
+  putint (x) ! imprime 5
+end

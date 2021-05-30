@@ -1,0 +1,5 @@
+loop for i from 1 to 10 while i < 5 do 
+    getint (var i); ! debe dar un error, variable protegida no debería poder pasarse por referencia
+    putint (i) 
+end
+

@@ -1,0 +1,12 @@
+package myP ~ 
+	var a: Integer
+end;
+let
+	var b: Char
+in
+	b := myP $ a;
+	put(b)
+
+end
+
+!Error: Intenta asignar un Integer a un Char 

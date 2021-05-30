@@ -1,0 +1,19 @@
+! con elsifs
+
+let
+
+  var a : Integer
+
+in
+  getint (var a);
+  if a > 2 then 
+    put ('2')
+  elsif a = 1 then
+    put ('1')
+  elsif a = 0 then
+    put ('0')
+  else
+    put ('n')
+  end ! del if compuesto
+
+end ! del let

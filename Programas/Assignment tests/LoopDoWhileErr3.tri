@@ -1,0 +1,8 @@
+loop do
+
+    putint(1) 
+
+  while 'a' ! condición no booleana 
+
+end
+

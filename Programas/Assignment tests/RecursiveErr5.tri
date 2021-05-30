@@ -1,0 +1,20 @@
+! Declaraciones mutuamente recursivas, con n�mero de par�metros incorrecto
+
+
+let
+
+  recursive
+
+    func f (a : Integer): Integer ~ if a > 0 then g(a - 1) else 0 ! llama a g con sólo un parámetro
+
+    |
+
+    func g (b : Integer, c: Boolean): Integer ~ if c then f(1) else 0
+
+  end
+
+in
+
+  putint(f(10)) 
+
+end

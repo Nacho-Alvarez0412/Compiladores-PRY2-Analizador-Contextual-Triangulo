@@ -1,0 +1,13 @@
+choose 'a' from
+
+  when 'b' then 
+    choose '1' from
+
+      when '1' | '2' | '3' then putint (12)
+
+      when '3' then putint (2) !etiqueta repetida
+
+    end
+  when 'c' then putint (2)
+
+end

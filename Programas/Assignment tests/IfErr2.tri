@@ -1,0 +1,15 @@
+! if then else end, nueva sintaxis
+! error en then comando
+
+let
+
+  var a : Integer
+
+in 
+  if a > 0 then 
+    putint ('M') !error, 'M' no es un entero
+  else
+    put ('m')
+  end ! del if
+
+end ! del let

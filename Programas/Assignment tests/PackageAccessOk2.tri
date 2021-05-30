@@ -1,0 +1,10 @@
+package myP ~ 
+	var a: Integer
+end;
+let
+	var b: Integer
+in
+	putint (b + myP $ a) 
+end
+
+!OK

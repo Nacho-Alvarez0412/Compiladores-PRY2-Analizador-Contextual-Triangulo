@@ -1,0 +1,5 @@
+loop for i from 1 to 10 until i > 5 do 
+    i := i + 1; ! debe dar un error, variable protegida no debe poder ser asignada
+    putint (i) 
+end
+

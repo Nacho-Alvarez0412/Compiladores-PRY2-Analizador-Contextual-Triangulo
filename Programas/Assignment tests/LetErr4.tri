@@ -1,0 +1,11 @@
+let
+
+  const a ~ 1 
+
+in
+
+  a := a + 1 ; ! debe dar un error, a es una constante
+  putint (a)
+
+end
+

@@ -1,0 +1,8 @@
+choose 0 from 
+  when 1 | 2 | 3 then putint (123)
+  when 4 then
+    choose 1 from
+      when 2 then putint (2) !no importa que se repita, está en choose anidado 
+      else putint (2)
+    end
+end

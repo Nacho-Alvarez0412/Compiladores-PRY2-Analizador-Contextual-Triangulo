@@ -1,0 +1,13 @@
+choose 1 * (2 + 2) from
+  when 1 | 2 | 3 then putint (123)
+  when 4 then
+    choose 3 from
+      !no importa que se repita, está en choose anidado
+      when 1 then putint (1) 
+      else putint (2)
+    end
+  else
+    put('E')
+end
+
+! Imprime 2

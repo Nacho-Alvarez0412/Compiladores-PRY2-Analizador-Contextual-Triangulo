@@ -1,0 +1,14 @@
+! Error: proc P llamado con argumento que es llamada a un proc F. P espera parametro Integer
+! Propósito: activar posible defecto latente en compilador de Triángulo original
+
+let
+  proc F () ~ ! un proc, no una función
+    putint(1)
+  end ! Los comandos no entregan valores.  Solamente completan su ejecucion sin retornar valores.
+  ;
+  proc P (x : Integer) ~ ! P espera paso por constante
+    putint (x * 2)
+  end
+in
+  P (F()) ! Error: los procedimientos no retornan valores. F no es una función; es un proc.
+end

@@ -1,0 +1,11 @@
+let
+
+  var a : Integer
+
+in
+
+  a := a + 1 ;
+  putint (a) 
+
+end
+

@@ -1,0 +1,6 @@
+loop for i from 1 to 10 while i < 3 do
+
+    putint (i) ! debe imprimir del 1 al 2
+
+end
+

@@ -1,0 +1,8 @@
+loop do
+
+    putint (1) 
+
+  until 1 ! condición no booleana
+
+end
+

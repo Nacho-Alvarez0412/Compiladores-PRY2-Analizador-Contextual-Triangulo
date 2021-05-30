@@ -1,0 +1,13 @@
+choose 1 * (2 + 2) from
+  when 1 | 2 .. 13 then putint (1213)
+  when 4 then ! error: 4 está en el rango 2 .. 13
+    choose 3 from
+      !no importa que se repita, está en choose anidado
+      when 1 then putint (1) 
+      else putint (2)
+    end
+  else
+    put('E')
+end
+
+! Error en primer choose: 4 está en el rango 2 .. 13

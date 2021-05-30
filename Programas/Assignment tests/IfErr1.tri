@@ -1,0 +1,15 @@
+! if then else end, nueva sintaxis
+! error en condición
+
+let
+
+  var a : Integer
+
+in 
+  if a > '0' then ! tipos incompatibles
+    put ('M')
+  else
+    put ('m')
+  end ! del if
+
+end ! del let 

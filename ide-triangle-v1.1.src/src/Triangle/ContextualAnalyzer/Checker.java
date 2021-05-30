@@ -129,26 +129,6 @@ import java.util.ArrayList;
 
 public final class Checker implements Visitor {
 
-  //////////////////////////////////////////////////////////////////////////
-  ///
-  ///
-  /// Metodos de an�lisis contextual nuevos o modificados
-  ///
-  ///
-  //////////////////////////////////////////////////////////////////////////
-
-  /*
-   * public Object visitCallCommand(CallCommand ast, Object o) {
-   * 
-   * Declaration binding = (Declaration) ast.I.visit(this, null); if (binding ==
-   * null) reportUndeclared(ast.I); else if (binding instanceof ProcDeclaration) {
-   * ast.APS.visit(this, ((ProcDeclaration) binding).FPS); } else if (binding
-   * instanceof ProcFormalParameter) { ast.APS.visit(this, ((ProcFormalParameter)
-   * binding).FPS); } else
-   * reporter.reportError("\"%\" is not a procedure identifier", ast.I.spelling,
-   * ast.I.position); return null; }
-   */
-
   public Object visitProcedure(Procedure ast, Object o) {
       System.out.println("holis");
       System.out.println(ast.I.spelling);
@@ -206,7 +186,113 @@ public final class Checker implements Visitor {
     return null;
   }
 
-  public Object visitChooseCommand(ChooseCommand ast, Object o) {
+  // Program
+
+  public Object visitSimpleProgram(SimpleProgram ast, Object o) {
+    ast.C.visit(this, null);
+    return null;
+  }
+
+  public Object visitCompoundProgram(CompoundProgram ast, Object o) {
+    ast.PD.visit(this, null);
+    ast.C.visit(this, null);
+
+    return null;
+  }
+
+
+  // Packages
+
+  // @author Ignacio
+  // @descripcion Modificacion visitPackageIdentifier
+  // @funcionalidad Implementaci�n visitPackageIdentifier
+  // @codigo I.6
+  public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
+    return ast.I.visit(this, o);
+  }
+  // END CAMBIO IGNACIO
+
+  // @author Ignacio
+  // @descripcion Modificacion visitPackageIdentifier
+  // @funcionalidad Implementaci�n visitPackageIdentifier
+  // @codigo I.8
+  public Object visitPackageVname(PackageVname ast, Object o) {
+
+    VarTDDeclaration packageDeclaration = (VarTDDeclaration) ast.PI.visit(this, null);
+
+    if (packageDeclaration != null) {
+      String variable = "";
+      String packageId = packageDeclaration.I.spelling;
+      if (ast.VN instanceof SimpleVarName) {
+        SimpleVarName var = (SimpleVarName) ast.VN;
+        variable = var.I.spelling;
+      }
+
+      else if (ast.VN instanceof DotVarName) {
+        DotVarName var = (DotVarName) ast.VN;
+        SimpleVarName var2 = (SimpleVarName) var.V;
+        variable = var2.I.spelling;
+      } else {
+        SubscriptVarName var = (SubscriptVarName) ast.VN;
+        SimpleVarName var2 = (SimpleVarName) var.V;
+        variable = var2.I.spelling;
+      }
+
+      if (idTable.inPackage(packageId, variable)) {
+        TypeDenoter vnType = (TypeDenoter) ast.VN.visit(this, packageId);
+
+        ast.variable = ast.VN.variable;
+        return vnType;
+      }
+
+      else {
+        reporter.reportError(" \"%\" is not declared in the package", variable, ast.position);
+        return null;
+      }
+
+    }
+    reporter.reportError("package \"%\" is not declared", ast.PI.I.spelling, ast.position);
+    return null;
+
+  }
+  // END CAMBIO IGNACIO
+
+  // @author Ignacio
+  // @descripcion Modificacion visitPackageIdentifier
+  // @funcionalidad Implementaci�n visitPackageIdentifier
+  // @codigo I.7
+  public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
+    return ast.I.visit(this, null);
+  }
+
+  public Object visitPackageLongIdentifier(PackageLongIdentifier ast, Object o) {
+    return ast.I.visit(this, ast.PI.I.spelling);
+  }
+
+  public Object visitSinglePackageDeclaration(SinglePackageDeclaration ast, Object o) {
+    if (ast.PI.visit(this, null) == null) {
+      Declaration dummyDeclaration = new VarTDDeclaration(ast.PI.I, null, dummyPos);
+      idTable.enter(ast.PI.I.spelling, dummyDeclaration);
+      idTable.openPackageScope(ast.PI.I.spelling);
+      ast.D.visit(this, null);
+      idTable.closePackageScope();
+    } else
+      reporter.reportError("package \"%\" already declared", ast.PI.I.spelling, ast.position);
+    return null;
+  }
+
+  public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) {
+    ast.PD1.visit(this, null);
+    ast.PD2.visit(this, null);
+    return null;
+  }
+
+  // END CAMBIO IGNACIO
+  
+  
+  // Case commands
+  
+   public Object visitChooseCommand(ChooseCommand ast, Object o) {
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     if (!eType.equals(StdEnvironment.integerType) && !eType.equals(StdEnvironment.charType)) {
       reporter.reportError("Choose expression must be an integer or character", null, ast.E.position);
@@ -419,113 +505,6 @@ public final class Checker implements Visitor {
   }
   // END CAMBIO
 
-  // Program
-
-  public Object visitSimpleProgram(SimpleProgram ast, Object o) {
-    ast.C.visit(this, null);
-    return null;
-  }
-
-  public Object visitCompoundProgram(CompoundProgram ast, Object o) {
-    ast.PD.visit(this, null);
-    ast.C.visit(this, null);
-
-    return null;
-  }
-  /*
-   * public Object visitProgram(Program ast, Object o) { ast.C.visit(this, null);
-   * return null; }
-   */
-
-  // Packages
-
-  // @author Ignacio
-  // @descripcion Modificacion visitPackageIdentifier
-  // @funcionalidad Implementaci�n visitPackageIdentifier
-  // @codigo I.6
-  public Object visitPackageIdentifier(PackageIdentifier ast, Object o) {
-    return ast.I.visit(this, o);
-  }
-  // END CAMBIO IGNACIO
-
-  // @author Ignacio
-  // @descripcion Modificacion visitPackageIdentifier
-  // @funcionalidad Implementaci�n visitPackageIdentifier
-  // @codigo I.8
-  public Object visitPackageVname(PackageVname ast, Object o) {
-
-    VarTDDeclaration packageDeclaration = (VarTDDeclaration) ast.PI.visit(this, null);
-
-    if (packageDeclaration != null) {
-      String variable = "";
-      String packageId = packageDeclaration.I.spelling;
-      if (ast.VN instanceof SimpleVarName) {
-        SimpleVarName var = (SimpleVarName) ast.VN;
-        variable = var.I.spelling;
-      }
-
-      else if (ast.VN instanceof DotVarName) {
-        DotVarName var = (DotVarName) ast.VN;
-        SimpleVarName var2 = (SimpleVarName) var.V;
-        variable = var2.I.spelling;
-      } else {
-        SubscriptVarName var = (SubscriptVarName) ast.VN;
-        SimpleVarName var2 = (SimpleVarName) var.V;
-        variable = var2.I.spelling;
-      }
-
-      if (idTable.inPackage(packageId, variable)) {
-        TypeDenoter vnType = (TypeDenoter) ast.VN.visit(this, packageId);
-
-        ast.variable = ast.VN.variable;
-        return vnType;
-      }
-
-      else {
-        reporter.reportError(" \"%\" is not declared in the package", variable, ast.position);
-        return null;
-      }
-
-    }
-    reporter.reportError("package \"%\" is not declared", ast.PI.I.spelling, ast.position);
-    return null;
-
-  }
-  // END CAMBIO IGNACIO
-
-  // @author Ignacio
-  // @descripcion Modificacion visitPackageIdentifier
-  // @funcionalidad Implementaci�n visitPackageIdentifier
-  // @codigo I.7
-  public Object visitSimpleLongIdentifier(SimpleLongIdentifier ast, Object o) {
-    return ast.I.visit(this, null);
-  }
-
-  public Object visitPackageLongIdentifier(PackageLongIdentifier ast, Object o) {
-    return ast.I.visit(this, ast.PI.I.spelling);
-  }
-
-  public Object visitSinglePackageDeclaration(SinglePackageDeclaration ast, Object o) {
-    if (ast.PI.visit(this, null) == null) {
-      Declaration dummyDeclaration = new VarTDDeclaration(ast.PI.I, null, dummyPos);
-      idTable.enter(ast.PI.I.spelling, dummyDeclaration);
-      idTable.openPackageScope(ast.PI.I.spelling);
-      ast.D.visit(this, null);
-      idTable.closePackageScope();
-    } else
-      reporter.reportError("package \"%\" already declared", ast.PI.I.spelling, ast.position);
-    return null;
-  }
-
-  public Object visitSequentialPackageDeclaration(SequentialPackageDeclaration ast, Object o) {
-    ast.PD1.visit(this, null);
-    ast.PD2.visit(this, null);
-    return null;
-  }
-
-  // END CAMBIO IGNACIO
-
-  // Teminan metodos nuevos o modificados
 
   // Commands
 
@@ -543,17 +522,6 @@ public final class Checker implements Visitor {
       reporter.reportError("\"%\" is not a procedure identifier", ast.LI.I.spelling, ast.LI.position);
     return null;
   }
-  /*
-   * public Object visitCallCommand(CallCommand ast, Object o) {
-   * 
-   * Declaration binding = (Declaration) ast.I.visit(this, null); if (binding ==
-   * null) reportUndeclared(ast.I); else if (binding instanceof ProcDeclaration) {
-   * ast.APS.visit(this, ((ProcDeclaration) binding).FPS); } else if (binding
-   * instanceof ProcFormalParameter) { ast.APS.visit(this, ((ProcFormalParameter)
-   * binding).FPS); } else
-   * reporter.reportError("\"%\" is not a procedure identifier", ast.I.spelling,
-   * ast.I.position); return null; }
-   */
 
   public Object visitAssignCommand(AssignCommand ast, Object o) {
 
@@ -1426,7 +1394,8 @@ public final class Checker implements Visitor {
     return ast.type;
   }
   /*
-   * J.5 public Object visitSubscriptVname(SubscriptVname ast, Object o) {
+   * J.5 
+   public Object visitSubscriptVname(SubscriptVname ast, Object o) {
    * TypeDenoter vType = (TypeDenoter) ast.V.visit(this, null); ast.variable =
    * ast.V.variable; TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); if
    * (vType != StdEnvironment.errorType) { if (! (vType instanceof

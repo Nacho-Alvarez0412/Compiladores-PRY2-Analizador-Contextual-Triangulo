@@ -1,0 +1,11 @@
+let
+
+  var a := 1
+
+in
+
+
+  put (a) ! put imprime caracteres, no enteros
+
+end
+ 

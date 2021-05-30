@@ -98,7 +98,6 @@ public final class IdentificationTable {
     } else {
         entry = new IdEntry(realID, attr, this.level, this.latest);
     }
-      System.out.println("("+realID[0]+","+realID[1]+")");
     this.latest = entry;
   }
   /*

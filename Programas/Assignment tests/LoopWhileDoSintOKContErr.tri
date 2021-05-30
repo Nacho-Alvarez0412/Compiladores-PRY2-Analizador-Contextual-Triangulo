@@ -1,0 +1,11 @@
+! sintácticamente bien
+loop ! con comando subordinado compuesto
+
+  while a > b do ! error contextual: a y b no están declaradas
+
+    putint (1) ;
+
+    putint (2) 
+
+end
+

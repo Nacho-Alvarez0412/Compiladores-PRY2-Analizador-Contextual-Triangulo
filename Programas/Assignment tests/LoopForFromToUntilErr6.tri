@@ -1,0 +1,5 @@
+loop for i from 1 to 10 until i > 5 do
+    putint (i) ! debe imprimir del 1 al 4
+end ;
+putint(i) ! i debe ser inaccesible aqu�
+

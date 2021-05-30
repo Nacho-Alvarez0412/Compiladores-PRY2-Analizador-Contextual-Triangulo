@@ -1,0 +1,6 @@
+  loop for i from 1 to 10 do 
+
+    put (i) ! debe dar error, i es entera, no char 
+
+  end
+

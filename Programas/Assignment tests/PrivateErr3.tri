@@ -1,0 +1,15 @@
+! Fuera de private no se ve lo que es privado
+
+let
+
+  private
+    const a ~ 1
+  in
+    const b ~ a + 1
+  end
+
+in
+
+  putint(a) ! a no debe ser visible aquí 
+
+end
