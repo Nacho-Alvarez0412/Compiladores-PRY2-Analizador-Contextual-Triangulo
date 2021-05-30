@@ -98,6 +98,7 @@ public final class IdentificationTable {
     } else {
         entry = new IdEntry(realID, attr, this.level, this.latest);
     }
+    System.out.println("("+realID[0]+","+realID[1]+")");
     this.latest = entry;
   }
   /*
@@ -142,7 +143,7 @@ public final class IdentificationTable {
       
       if (entry == null)
         searching = false;
-      else if (entry.id[1].equals(id) && (isPackage(entry.id[0]))) {
+      else if (entry.id[1].equals(id) && (isPackage(entry.id[0])) && entry.level <= this.level) {
             present = true;
             searching = false;
             attr = entry.attr;
