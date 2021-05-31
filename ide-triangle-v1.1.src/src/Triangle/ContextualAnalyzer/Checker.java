@@ -346,7 +346,7 @@ public final class Checker implements Visitor {
     } else if (chooseType.equals(StdEnvironment.charType)) {
       if (caseLiteral1Spelling.charAt(1) > caseLiteral2Spelling.charAt(1)) {
         reporter.reportError(
-            "First character literal in case range must have a minor ascii code than the second literal", "",
+            "First character literal in case range must have a minor value than the second literal", "",
             ast.position);
       }
       // Create range of values
