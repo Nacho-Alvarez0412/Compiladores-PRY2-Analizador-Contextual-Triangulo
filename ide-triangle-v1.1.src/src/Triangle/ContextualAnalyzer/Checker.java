@@ -587,6 +587,7 @@ public final class Checker implements Visitor {
     idTable.openScope();
     ast.D.visit(this, null);
     ast.C.visit(this, null);
+    this.idTable.printTable();
     idTable.closeScope();
     return null;
   }
@@ -861,15 +862,14 @@ public final class Checker implements Visitor {
   // @codigo J.3
   public Object visitPrivDeclaration(PrivDeclaration ast, Object o) {
     idTable.openScope();
-    idTable.setPrivateFlag(false, ast);
-    if (ast.D1 instanceof PrivDeclaration) {
-        ast.D1.visit(this, true);
-    }
-    else
-        ast.D1.visit(this, null);
-    idTable.setPrivateFlag(true, ast);
+    idTable.pushPrivFlag(false);
+    ast.D1.visit(this, null);
+    idTable.popPrivFlag();
+    idTable.pushPrivFlag(true);
     ast.D2.visit(this, null);
-    idTable.closeScope();
+    idTable.popPrivFlag();
+    idTable.closePrivateScope();
+    idTable.privateExport();
     return null;
   }
 
@@ -1056,7 +1056,7 @@ public final class Checker implements Visitor {
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     if (!(fp instanceof ConstFormalParameter))
       reporter.reportError("const actual parameter not expected here", "", ast.position);
-    else if (!eType.equals(((ConstFormalParameter) fp).T))
+    else if (eType == null || !eType.equals(((ConstFormalParameter) fp).T))
       reporter.reportError("wrong type for const actual parameter", "", ast.E.position);
     return null;
   }
@@ -1126,7 +1126,6 @@ public final class Checker implements Visitor {
 
   public Object visitEmptyActualParameterSequence(EmptyActualParameterSequence ast, Object o) {
     FormalParameterSequence fps = (FormalParameterSequence) o;
-      System.out.println(fps);
     if (!(fps instanceof EmptyFormalParameterSequence))
       reporter.reportError("too few actual parameters", "", ast.position);
     return null;

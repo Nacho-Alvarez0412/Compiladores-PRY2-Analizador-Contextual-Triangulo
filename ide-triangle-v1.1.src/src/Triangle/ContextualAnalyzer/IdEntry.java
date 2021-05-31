@@ -26,12 +26,14 @@ public class IdEntry {
   protected Declaration attr;
   protected int level;
   protected IdEntry previous;
+  protected boolean privExport;
 
-  IdEntry (String[] id, Declaration attr, int level, IdEntry previous) {
+  IdEntry (String[] id, Declaration attr, int level, IdEntry previous, boolean priv) {
     this.id = id;
     this.attr = attr;
     this.level = level;
     this.previous = previous;
+    this.privExport = priv;
   }
   
   /*

@@ -15,6 +15,7 @@
 package Triangle.ContextualAnalyzer;
 
 import Triangle.AbstractSyntaxTrees.Declaration;
+import java.util.ArrayList;
 
 public final class IdentificationTable {
 
@@ -30,6 +31,7 @@ public final class IdentificationTable {
   private int levelBackup;
   private int privateLevel;
   private Declaration lastPrivateAST;
+  private ArrayList<Boolean> privStack;
   // END CAMBIO IGNACIO
 
   public IdentificationTable () {
@@ -41,6 +43,7 @@ public final class IdentificationTable {
     privateCont = 0;
     privateLevel = 0;
     lastPrivateAST = null;
+    privStack = new ArrayList<>();
   }
   // Opens a new level in the identification table, 1 higher than the
   // current topmost level.
@@ -65,6 +68,24 @@ public final class IdentificationTable {
     }
     this.level--;
     this.latest = entry;
+  }
+  
+  public void closePrivateScope () {
+    IdEntry entryExport, lastExport;
+    lastExport = this.latest;
+    entryExport = this.latest;
+    while (entryExport.privExport) {
+        lastExport = entryExport;
+        entryExport = lastExport.previous;
+    }
+    IdEntry entry, local;
+    entry = this.latest;
+    while (entry.level == this.level) {
+        local = entry;
+        entry = local.previous;
+    }
+    this.level--;
+    lastExport.previous = entry;
   }
 
   // Makes a new entry in the identification table for the given identifier
@@ -96,13 +117,12 @@ public final class IdentificationTable {
 
     attr.duplicated = present;
     // Add new entry ...
-    if (this.privateFlag){
-        realID[0] = "Scope " + this.privateLevel;
-        entry = new IdEntry(realID, attr, this.privateLevel, this.latest);
+    if (!this.privStack.isEmpty() && this.privStack.get(this.privStack.size() - 1)){
+        realID[0] = "Scope " + this.level;
+        entry = new IdEntry(realID, attr, this.level, this.latest, true);
     } else {
-        entry = new IdEntry(realID, attr, this.level, this.latest);
+        entry = new IdEntry(realID, attr, this.level, this.latest, false);
     }
-    System.out.println("("+realID[0]+","+realID[1]+")");
     this.latest = entry;
   }
   /*
@@ -181,23 +201,56 @@ public final class IdentificationTable {
   // @descripcion   Nuevos métodos para la IdentificationTable
   // @funcionalidad Agregar mayor funcionalidad a Identification Table
   // @codigo        I.4
-    public void setPrivateFlag (boolean flag, Declaration privAST) {
-        if (flag) {
-            if (privateCont == 0)
-                this.privateLevel = this.level - 1;
-            this.privateCont += 1;
-            this.privateFlag = true;
-        }
-        else{
-            if(privAST == this.lastPrivateAST)
-                this.privateCont -= 1;
-            else
-                this.lastPrivateAST = privAST;
-            this.privateFlag = false;
+    
+    void pushPrivFlag (boolean flag) {
+        this.privStack.add(flag);
+    }
+    
+    boolean popPrivFlag () {
+        boolean poped = this.privStack.get(this.privStack.size() - 1);
+        this.privStack.remove(this.privStack.size() - 1);
+        return poped;
+    }
+    
+    void privateExport () {
+        IdEntry entry;
+        boolean searching;
+        searching = true;
+        entry = this.latest;
+        while (searching) {
+            if (entry == null)
+                searching = false;
+            else if(entry.privExport){
+                if(this.privStack.lastIndexOf(true) == -1) { 
+                    entry.level -= 1;
+                    entry.id[0] = "Scope " + entry.level;
+                    entry.privExport = false;
+                }    
+                else{
+                    entry.level -= 1;
+                    entry.id[0] = "Scope " + entry.level;
+                }
+                entry = entry.previous;
+            } else
+              entry = entry.previous;
         }
     }
     
-
+    void printTable () {
+        IdEntry entry;
+        boolean searching;
+        searching = true;
+        entry = this.latest;
+        while (searching) {
+            if (entry == null)
+                searching = false;
+            else {
+                System.out.println("("+entry.id[0]+","+entry.id[1]+","+entry.privExport+")");
+                entry = entry.previous;
+            }
+        }
+    }
+ 
     boolean checkForPackage(String packageId) {
         IdEntry entry = this.latest;
         boolean searching = true;

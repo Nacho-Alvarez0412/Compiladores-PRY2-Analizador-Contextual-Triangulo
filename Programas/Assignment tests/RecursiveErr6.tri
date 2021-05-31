@@ -19,6 +19,6 @@ let
 
 in
 
-  putint(f(10)) ! aquí también podría haber alguna dificultad
+  putint(f()) ! aquí también podría haber alguna dificultad
 
 end
