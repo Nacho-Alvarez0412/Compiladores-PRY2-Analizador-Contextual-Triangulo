@@ -15,7 +15,7 @@
 package Triangle.ContextualAnalyzer;
 
 import Triangle.AbstractSyntaxTrees.Declaration;
-import java.util.ArrayList;
+import java.util.Stack;
 
 public final class IdentificationTable {
 
@@ -25,26 +25,18 @@ public final class IdentificationTable {
   // @descripcion   Agregar atributos a IdentificationTable
   // @funcionalidad Incrementar funcionalidad de IdentificationTable
   // @codigo        I.1
-  private boolean privateFlag;
-  private int privateCont;
   private String packageID;
   private int levelBackup;
-  private int privateLevel;
-  private Declaration lastPrivateAST;
-  private ArrayList<Boolean> privStack;
-  // END CAMBIO IGNACIO
+  private Stack<Boolean> privStack;
 
   public IdentificationTable () {
     level = 0;
     levelBackup = level;
     latest = null;
-    privateFlag = false;
     packageID = null;
-    privateCont = 0;
-    privateLevel = 0;
-    lastPrivateAST = null;
-    privStack = new ArrayList<>();
+    privStack = new Stack<>();
   }
+  // END CAMBIO IGNACIO
   // Opens a new level in the identification table, 1 higher than the
   // current topmost level.
 
@@ -68,24 +60,6 @@ public final class IdentificationTable {
     }
     this.level--;
     this.latest = entry;
-  }
-  
-  public void closePrivateScope () {
-    IdEntry entryExport, lastExport;
-    lastExport = this.latest;
-    entryExport = this.latest;
-    while (entryExport.privExport) {
-        lastExport = entryExport;
-        entryExport = lastExport.previous;
-    }
-    IdEntry entry, local;
-    entry = this.latest;
-    while (entry.level == this.level) {
-        local = entry;
-        entry = local.previous;
-    }
-    this.level--;
-    lastExport.previous = entry;
   }
 
   // Makes a new entry in the identification table for the given identifier
@@ -202,40 +176,6 @@ public final class IdentificationTable {
   // @funcionalidad Agregar mayor funcionalidad a Identification Table
   // @codigo        I.4
     
-    void pushPrivFlag (boolean flag) {
-        this.privStack.add(flag);
-    }
-    
-    boolean popPrivFlag () {
-        boolean poped = this.privStack.get(this.privStack.size() - 1);
-        this.privStack.remove(this.privStack.size() - 1);
-        return poped;
-    }
-    
-    void privateExport () {
-        IdEntry entry;
-        boolean searching;
-        searching = true;
-        entry = this.latest;
-        while (searching) {
-            if (entry == null)
-                searching = false;
-            else if(entry.privExport){
-                if(this.privStack.lastIndexOf(true) == -1) { 
-                    entry.level -= 1;
-                    entry.id[0] = "Scope " + entry.level;
-                    entry.privExport = false;
-                }    
-                else{
-                    entry.level -= 1;
-                    entry.id[0] = "Scope " + entry.level;
-                }
-                entry = entry.previous;
-            } else
-              entry = entry.previous;
-        }
-    }
-    
     void printTable () {
         IdEntry entry;
         boolean searching;
@@ -293,8 +233,6 @@ public final class IdentificationTable {
       }
       return false;
     }
-    
-    //END CAMBIO IGNACIO
 
     Declaration retrieveFromPackage(String id, String packageName) {
         IdEntry entry;
@@ -324,6 +262,63 @@ public final class IdentificationTable {
         return false;
     }
 
-
+    //END CAMBIO IGNACIO
     
+    // @author        Joseph
+    // @descripcion   Nuevos métodos para la IdentificationTable que permiten el manejo de declaraciones private
+    // @funcionalidad Agregar mayor funcionalidad a Identification Table
+    // @codigo        J.9
+    
+    public void closePrivateScope () {
+    IdEntry entryExport, lastExport;
+    lastExport = this.latest;
+    entryExport = this.latest;
+    while (entryExport.privExport) {
+        lastExport = entryExport;
+        entryExport = lastExport.previous;
+    }
+    IdEntry entry, local;
+    entry = this.latest;
+    while (entry.level == this.level) {
+        local = entry;
+        entry = local.previous;
+    }
+    this.level--;
+    lastExport.previous = entry;
+  }
+    
+    void pushPrivFlag (boolean flag) {
+        this.privStack.push(flag);
+    }
+    
+    boolean popPrivFlag () {
+        return this.privStack.pop();
+    }
+    
+    void privateExport () {
+        IdEntry entry;
+        boolean searching;
+        searching = true;
+        entry = this.latest;
+        while (searching) {
+            if (entry == null)
+                searching = false;
+            else if(entry.privExport){
+                if(!this.privStack.contains(true)) { 
+                    entry.level -= 1;
+                    entry.id[0] = "Scope " + entry.level;
+                    entry.privExport = false;
+                }    
+                else{
+                    entry.level -= 1;
+                    entry.id[0] = "Scope " + entry.level;
+                }
+                entry = entry.previous;
+            } else
+              entry = entry.previous;
+        }
+    }
+    
+    // END CAMBIO JOSEPH
+   
 }

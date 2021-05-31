@@ -9,7 +9,8 @@ let
       const b ~ a + 1 ! a visible aquí
     in
       const c ~ b + a
-    end;
+    end
+    ;
     const d ~ a + c
   end
 

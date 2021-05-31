@@ -125,10 +125,9 @@ import Triangle.AbstractSyntaxTrees.SimpleProgram;
 import Triangle.AbstractSyntaxTrees.CompoundProgram;
 import Triangle.AbstractSyntaxTrees.ProcFuncs;
 import Triangle.SyntacticAnalyzer.SourcePosition;
-
+import java.util.Stack;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public final class Checker implements Visitor {
 
@@ -872,8 +871,6 @@ public final class Checker implements Visitor {
     idTable.privateExport();
     return null;
   }
-
-  
   // END CAMBIO Joseph
 
   public Object visitConstDeclaration(ConstDeclaration ast, Object o) {

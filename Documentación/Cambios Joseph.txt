@@ -6,3 +6,4 @@ J.5: Checker.java
 J.6: Checker.java
 J.7: Checker.java
 J.8: Checker.java
+J.9: IdentificationTable.java
