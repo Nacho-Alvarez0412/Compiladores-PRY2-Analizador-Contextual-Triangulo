@@ -175,7 +175,9 @@ public final class Checker implements Visitor {
 
   public Object visitSequentialProcFuncs(SequentialProcFuncs ast, Object o) {
       
-    idTable.openScope();
+    
+      
+    //idTable.openScope();
     Object currentAst2 = ast.PF2.visit(this,null);
     Object currentAst = ast.PF1.visit(this,null);
     
