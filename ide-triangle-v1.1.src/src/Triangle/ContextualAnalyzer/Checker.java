@@ -241,12 +241,12 @@ public final class Checker implements Visitor {
 
       else {
         reporter.reportError(" \"%\" is not declared in the package", variable, ast.position);
-        return null;
+        return StdEnvironment.errorType;
       }
 
     }
     reporter.reportError("package \"%\" is not declared", ast.PI.I.spelling, ast.position);
-    return null;
+    return StdEnvironment.errorType;
 
   }
   // END CAMBIO IGNACIO
@@ -712,7 +712,6 @@ public final class Checker implements Visitor {
       ast.type = ((FuncFormalParameter) binding).T;
     }
     else if (binding instanceof ProcDeclaration) {
-        //System.out.println(((ProcDeclaration) binding).I);
     }
     else
       reporter.reportError("\"%\" is not a function identifier", ast.LI.I.spelling, ast.LI.position);
@@ -738,7 +737,6 @@ public final class Checker implements Visitor {
       if (!(binding instanceof BinaryOperatorDeclaration))
         reporter.reportError("\"%\" is not a binary operator", ast.O.spelling, ast.O.position);
       BinaryOperatorDeclaration bbinding = (BinaryOperatorDeclaration) binding;
-        System.out.println(bbinding.ARG1);
       if (bbinding.ARG1 == StdEnvironment.anyType) {
         // this operator must be "=" or "\="
         if (!e1Type.equals(e2Type))
@@ -818,7 +816,6 @@ public final class Checker implements Visitor {
   }
 
   public Object visitVnameExpression(VnameExpression ast, Object o) {
-
     ast.type = (TypeDenoter) ast.V.visit(this, null);
     return ast.type;
   }
@@ -870,13 +867,19 @@ public final class Checker implements Visitor {
   // @codigo J.3
   public Object visitPrivDeclaration(PrivDeclaration ast, Object o) {
     idTable.openScope();
-    ast.D1.visit(this, null);
-    idTable.togglePrivateFlag();
+    idTable.setPrivateFlag(false, ast);
+    if (ast.D1 instanceof PrivDeclaration) {
+        ast.D1.visit(this, true);
+    }
+    else
+        ast.D1.visit(this, null);
+    idTable.setPrivateFlag(true, ast);
     ast.D2.visit(this, null);
-    idTable.togglePrivateFlag();
     idTable.closeScope();
     return null;
   }
+
+  
   // END CAMBIO Joseph
 
   public Object visitConstDeclaration(ConstDeclaration ast, Object o) {
@@ -999,7 +1002,6 @@ public final class Checker implements Visitor {
   // Always returns null. Does not use the given object.
 
   public Object visitConstFormalParameter(ConstFormalParameter ast, Object o) {
-            System.out.println("asrf");
     ast.T = (TypeDenoter) ast.T.visit(this, null);
     idTable.enter(ast.I.spelling, ast);
     if (ast.duplicated)
@@ -1060,8 +1062,8 @@ public final class Checker implements Visitor {
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     if (!(fp instanceof ConstFormalParameter))
       reporter.reportError("const actual parameter not expected here", "", ast.position);
-    else if (!this.recursion && !eType.equals(((ConstFormalParameter) fp).T))
-      reporter.reportError("wrong type for const actual parameter", "", ast.E.position);
+    //else if (!this.recursion && !eType.equals(((ConstFormalParameter) fp).T))
+      //reporter.reportError("wrong type for const actual parameter", "", ast.E.position);
     return null;
   }
 
@@ -1130,6 +1132,7 @@ public final class Checker implements Visitor {
 
   public Object visitEmptyActualParameterSequence(EmptyActualParameterSequence ast, Object o) {
     FormalParameterSequence fps = (FormalParameterSequence) o;
+      System.out.println(fps);
     if (!(fps instanceof EmptyFormalParameterSequence))
       reporter.reportError("too few actual parameters", "", ast.position);
     return null;
@@ -1171,7 +1174,6 @@ public final class Checker implements Visitor {
       reporter.reportError("\"%\" is not a type identifier", ast.LI.I.spelling, ast.LI.position);
       return StdEnvironment.errorType;
     }
-      System.out.println(((TypeDeclaration) binding).T);
     return ((TypeDeclaration) binding).T;
   }
 

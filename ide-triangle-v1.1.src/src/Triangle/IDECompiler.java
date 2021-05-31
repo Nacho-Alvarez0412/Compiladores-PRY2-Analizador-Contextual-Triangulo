@@ -154,7 +154,6 @@ public class IDECompiler {
                 Logger.getLogger(IDECompiler.class.getName()).log(Level.SEVERE, null, ex);
             }
         if (success)
-            //Satanas mas hijuelagran puta
             System.out.println("Compilation was successful.");
         else
             System.out.println("Compilation was unsuccessful.");

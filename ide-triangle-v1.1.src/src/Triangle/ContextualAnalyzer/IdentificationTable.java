@@ -25,8 +25,11 @@ public final class IdentificationTable {
   // @funcionalidad Incrementar funcionalidad de IdentificationTable
   // @codigo        I.1
   private boolean privateFlag;
+  private int privateCont;
   private String packageID;
   private int levelBackup;
+  private int privateLevel;
+  private Declaration lastPrivateAST;
   // END CAMBIO IGNACIO
 
   public IdentificationTable () {
@@ -35,6 +38,9 @@ public final class IdentificationTable {
     latest = null;
     privateFlag = false;
     packageID = null;
+    privateCont = 0;
+    privateLevel = 0;
+    lastPrivateAST = null;
   }
   // Opens a new level in the identification table, 1 higher than the
   // current topmost level.
@@ -91,10 +97,8 @@ public final class IdentificationTable {
     attr.duplicated = present;
     // Add new entry ...
     if (this.privateFlag){
-        this.level -= 1;
-        realID[0] = "Scope " + this.level;
-        entry = new IdEntry(realID, attr, this.level, this.latest);
-        this.level += 1;
+        realID[0] = "Scope " + this.privateLevel;
+        entry = new IdEntry(realID, attr, this.privateLevel, this.latest);
     } else {
         entry = new IdEntry(realID, attr, this.level, this.latest);
     }
@@ -140,7 +144,7 @@ public final class IdentificationTable {
 
     entry = this.latest;
     while (searching) {
-      
+       
       if (entry == null)
         searching = false;
       else if (entry.id[1].equals(id) && (isPackage(entry.id[0])) && entry.level <= this.level) {
@@ -177,8 +181,20 @@ public final class IdentificationTable {
   // @descripcion   Nuevos métodos para la IdentificationTable
   // @funcionalidad Agregar mayor funcionalidad a Identification Table
   // @codigo        I.4
-    public void togglePrivateFlag () {
-        this.privateFlag = ! this.privateFlag;
+    public void setPrivateFlag (boolean flag, Declaration privAST) {
+        if (flag) {
+            if (privateCont == 0)
+                this.privateLevel = this.level - 1;
+            this.privateCont += 1;
+            this.privateFlag = true;
+        }
+        else{
+            if(privAST == this.lastPrivateAST)
+                this.privateCont -= 1;
+            else
+                this.lastPrivateAST = privAST;
+            this.privateFlag = false;
+        }
     }
     
 
