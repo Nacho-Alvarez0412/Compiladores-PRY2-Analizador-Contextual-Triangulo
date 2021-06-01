@@ -123,7 +123,6 @@ public final class IdentificationTable {
     this.latest = entry;
   }
   */
-  // END CAMBIO IGNACIO
 
   // Finds an entry for the given identifier in the identification table,
   // if any. If there are several entries for that identifier, finds the
@@ -151,10 +150,12 @@ public final class IdentificationTable {
 
     return attr;
   }
-    
+  
+    // END CAMBIO IGNACIO
+
   // @author        Ignacio
   // @descripcion   Verificar si se repite un entry
-  // @funcionalidad Agregar nueva función isEntryEquals
+  // @funcionalidad Agregar nueva funciï¿½n isEntryEquals
   // @codigo        I.3
     private boolean isEntryEquals( String[] entryID, String[] id) {
         return entryID[0].equals(id[0]) && entryID[1].equals(id[1]);
@@ -172,7 +173,7 @@ public final class IdentificationTable {
     
     
   // @author        Ignacio
-  // @descripcion   Nuevos métodos para la IdentificationTable
+  // @descripcion   Nuevos mï¿½todos para la IdentificationTable
   // @funcionalidad Agregar mayor funcionalidad a Identification Table
   // @codigo        I.4
     
@@ -265,7 +266,7 @@ public final class IdentificationTable {
     //END CAMBIO IGNACIO
     
     // @author        Joseph
-    // @descripcion   Nuevos métodos para la IdentificationTable que permiten el manejo de declaraciones private
+    // @descripcion   Nuevos mï¿½todos para la IdentificationTable que permiten el manejo de declaraciones private
     // @funcionalidad Agregar mayor funcionalidad a Identification Table
     // @codigo        J.9
     
